@@ -47,6 +47,9 @@ contract CollateralVault {
 		lockingPeriod = _lockingPeriod;
 		amountCollateral = _amountCollateral;
 		owner = msg.sender;
+		payable(owner).transfer(
+		    amountCollateral
+		);
 		mint(_amountCollateral);
 	}
 
