@@ -134,7 +134,7 @@ export function MatrixView({ bundles }: { bundles: Array<any> }) {
     series,
   };
 
-  console.log("series", JSON.stringify(series));
+  // console.log("series", JSON.stringify(series));
 
   const legendItems = [
     { color: "gray", label: "Empty" },
