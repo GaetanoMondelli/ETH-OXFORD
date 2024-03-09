@@ -19,7 +19,7 @@ contract Broker is IERC721 {
 	address public owner;
 	uint256 public fee;
 
-	uint256 vaultId = 0;
+	// uint256 vaultId = 0;
 
 	constructor(
 		address _flareContractRegistry,
@@ -38,9 +38,11 @@ contract Broker is IERC721 {
 
 	function openVault(
 		string memory _symbolSynthetic,
-		uint256 _amountCollateral
+		uint256 _amountCollateral,
+		uint256 vaultId
 	) public payable {
 		// required value is the amount of collateral plus the percentage fee on the collateral
+		require(owners[vaultId] == address(0), "Vault already exists");
 		require(msg.value >= _amountCollateral, "Insufficient collateral");
 		require(
 			msg.value == _amountCollateral + ((_amountCollateral * fee) / 100),
@@ -57,11 +59,12 @@ contract Broker is IERC721 {
 			_amountCollateral,
 			lockingPeriod
 		);
-		uint256 tokenId = uint256(vaultId++);
+		// uint256 tokenId = uint256(vaultId++);
+
 		balances[msg.sender] += 1;
-		owners[tokenId] = msg.sender;
-		vaults[tokenId] = address(vault);
-		vaultsByOwner[msg.sender].push(tokenId);
+		owners[vaultId] = msg.sender;
+		vaults[vaultId] = address(vault);
+		vaultsByOwner[msg.sender].push(vaultId);
 	}
 
 	function supportsInterface(
