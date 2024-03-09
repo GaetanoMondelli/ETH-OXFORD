@@ -37,9 +37,11 @@ contract ETF  {
     
     struct EventInfo {
     address sender;
-    uint256 value;
-    bytes data;
-}
+    uint256 quantity;
+    uint256 chainId;
+    address contributor;
+    // bytes data;
+    }
 
 struct TransactionInfo {
     EVMTransaction.Proof originalTransaction;
@@ -71,7 +73,6 @@ struct TransactionInfo {
             for (uint256 j = 0; j < vaults[_vaultId]._tokens.length; j++) {
                 if (requiredTokens[i]._address == vaults[_vaultId]._tokens[j]._address) {
                     found = true;
-                    // check if the quantity is enough
                     if (requiredTokens[i]._quantity > vaults[_vaultId]._tokens[j]._quantity) {
                         return false;
                     }
@@ -86,6 +87,10 @@ struct TransactionInfo {
     }
 
     function deposit(uint256 _vaultId, Token[] memory _tokens) public {
+        _deposit(_vaultId, _tokens, chainId);
+    }
+
+    function _deposit(uint256 _vaultId, Token[] memory _tokens, uint256 _chainId) private {
         require(vaults[_vaultId].state == VaultState.OPEN, "Vault is not open");
         uint256 whitelistedQuantity = 0;
         for (uint256 i = 0; i < _tokens.length; i++) {
@@ -104,6 +109,8 @@ struct TransactionInfo {
                 _tokens[i]._quantity >= requiredTokens[whitelistedIndex]._quantity,
                 "Insufficient quantity"
             );
+            // check chain id
+            require(_tokens[i]._chainId == _chainId, "Invalid chain id");
             whitelistedQuantity++;
         }
         require(
@@ -127,27 +134,25 @@ struct TransactionInfo {
 
     TransactionInfo[] public transactions;
 
-    function collectPayment(EVMTransaction.Proof calldata _transaction) external {
+    function checkExternalDeposit(EVMTransaction.Proof calldata _transaction) external {
         require(isEVMTransactionProofValid(_transaction), "Invalid transaction proof");
-
         uint256 transactionIndex = transactions.length;
         transactions.push();
         transactions[transactionIndex].originalTransaction = _transaction;
         transactions[transactionIndex].eventNumber = _transaction.data.responseBody.events.length;
-        EventInfo[] storage eventInfo = transactions[transactionIndex].eventInfo;
+        // EventInfo[] storage eventInfo = transactions[transactionIndex].eventInfo;
+        Token[] memory tokens = new Token[](_transaction.data.responseBody.events.length);
+        uint256 external_chainId;
         for(uint256 i = 0; i < _transaction.data.responseBody.events.length; i++) {
-
-            // Decode each event
-            (address sender, uint256 value, bytes memory data) = abi.decode(_transaction.data.responseBody.events[i].data, (address, uint256, bytes));
-            eventInfo.push(EventInfo({
-                sender:sender,
-                value:value,
-                data:data
-            }));
-
+            // (address sender, uint256 value, bytes memory data) = abi.decode(_transaction.data.responseBody.events[i].data, (address, uint256, bytes));
+            (address _address, uint256 _quantity, uint256 _chainId, address _contributor) = abi.decode(_transaction.data.responseBody.events[i].data, (address, uint256, uint256, address));
+            tokens[i] = Token(_address, _quantity, _chainId, _contributor);
+            external_chainId = _chainId;
         }
+        _deposit(transactionIndex, tokens, external_chainId);
     }
-        function isEVMTransactionProofValid(
+    
+    function isEVMTransactionProofValid(
         EVMTransaction.Proof calldata transaction
     ) public view returns (bool) {
         // Use the library to get the verifier contract and verify that this transaction was proved by state connector
