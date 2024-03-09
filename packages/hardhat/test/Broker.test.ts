@@ -37,8 +37,8 @@ describe("Broker", function () {
   it("Should be to open a vault", async function () {
     const vaultFee = collateralAmount.mul(fee).div(100).add(collateralAmount);
     console.log("vaultFee", vaultFee.toString());
-    const vault = await broker.openVault("testBTC", collateralAmount.toString(), {
-      value: vaultFee.toString(),
+    const vault = await broker.openVault("testBTC", collateralAmount.toString(), "1", {
+      value: vaultFee.toString()
     });
     expect(vault).to.be.ok;
     // expect the balance of the vault to be the same as the collateral amount
