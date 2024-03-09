@@ -54,7 +54,7 @@ struct TransactionInfo {
         chainId = _chainId;
     }
 
-    function getBundleStates()
+    function getVaultStates()
         public
         view
         returns (VaultState[] memory)
@@ -64,6 +64,14 @@ struct TransactionInfo {
             states[i] = vaults[i].state;
         }
         return states;
+    }
+
+    function getVault(uint256 _vaultId)
+        public
+        view
+        returns (Token[] memory, VaultState)
+    {
+        return (vaults[_vaultId]._tokens, vaults[_vaultId].state);
     }
 
 
@@ -91,7 +99,9 @@ struct TransactionInfo {
     }
 
     function _deposit(uint256 _vaultId, Token[] memory _tokens, uint256 _chainId) private {
-        require(vaults[_vaultId].state == VaultState.OPEN, "Vault is not open");
+        require(vaults[_vaultId].state == VaultState.OPEN || vaults[_vaultId].state == VaultState.EMPTY,
+            "Vault is not open or empty"
+        );
         uint256 whitelistedQuantity = 0;
         for (uint256 i = 0; i < _tokens.length; i++) {
             uint256 whitelistedIndex = requiredTokens.length;
@@ -125,7 +135,18 @@ struct TransactionInfo {
                 address(this),
                 _tokens[i]._quantity
             );
+            uint256 j = 0;
+            for (j=0; j < vaults[_vaultId]._tokens.length; j++) {
+                if (vaults[_vaultId]._tokens[j]._address == _tokens[i]._address) {
+                    vaults[_vaultId]._tokens[j]._quantity += _tokens[i]._quantity;
+                    break;
+                }
+            }
+            if (j == vaults[_vaultId]._tokens.length) {
+                vaults[_vaultId]._tokens.push(_tokens[i]);
+            }
         }
+        
 
         if (checkVaultCompletion(_vaultId)) {
             vaults[_vaultId].state = VaultState.MINTED;
