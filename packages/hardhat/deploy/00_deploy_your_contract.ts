@@ -1,6 +1,7 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import { Contract } from "ethers";
+import { BigNumber } from "@ethersproject/bignumber";
 
 /**
  * Deploys a contract named "YourContract" using the deployer account and
@@ -9,16 +10,12 @@ import { Contract } from "ethers";
  * @param hre HardhatRuntimeEnvironment object.
  */
 const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  /*
-    On localhost, the deployer account is the one that comes with Hardhat, which is already funded.
+  const initialCollateralAmount = 1000;
+  const collateralAmount = BigNumber.from(initialCollateralAmount).mul(BigNumber.from(10).pow(18));
+  const fee = 2;
+  const collateralRatio = 60;
+  const lockinPeriod = 0;
 
-    When deploying to live networks (e.g `yarn deploy --network goerli`), the deployer account
-    should have sufficient balance to pay for the gas fees for contract creation.
-
-    You can generate a random account with `yarn generate` which will fill DEPLOYER_PRIVATE_KEY
-    with a random private key in the .env file (then used on hardhat.config.ts)
-    You can run the `yarn account` command to check your balance in every network.
-  */
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
@@ -29,6 +26,39 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
     log: true,
     // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
     // automatically mining the contract deployment transaction. There is no effect on live networks.
+    autoMine: true,
+  });
+
+  let contractRegistry: Contract;
+  let ftsoRegistry: Contract;
+  let broker: Contract;
+
+
+  if (hre.network.name === "hardhat") {
+    await deploy("MockContractRegistry", {
+      from: deployer,
+      args: [],
+      log: true,
+      autoMine: true,
+    });
+
+    contractRegistry = await hre.ethers.getContract<Contract>("MockContractRegistry", deployer);
+
+    await deploy("MockFtsoRegistry", {
+      from: deployer,
+      args: [],
+      log: true,
+      autoMine: true,
+    });
+
+    ftsoRegistry = await hre.ethers.getContract<Contract>("MockFtsoRegistry", deployer);
+    contractRegistry.setContractAddress("FtsoRegistry", await ftsoRegistry.getAddress());
+  }
+
+  await deploy("MockFtsoRegistry", {
+    from: deployer,
+    args: [await contractRegistry.getAddress(), "C2FLR", collateralRatio, lockinPeriod, fee],
+    log: true,
     autoMine: true,
   });
 
