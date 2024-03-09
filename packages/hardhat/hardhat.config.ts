@@ -15,9 +15,9 @@ import "hardhat-deploy-ethers";
 const providerApiKey = process.env.ALCHEMY_API_KEY || "oKxs-03sij-U_N0iOlrSsZFr29-IqbuF";
 // If not set, it uses the hardhat account 0 private key.
 const deployerPrivateKey =
-  process.env.DEPLOYER_PRIVATE_KEY ?? "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+  process.env.DEPLOYER_PRIVATE_KEY ?? "1294695293f333466d699cca83fce35cf2c3dd960fd35a93d44ae548835c9b32";
 // If not set, it uses ours Etherscan default API key.
-const etherscanApiKey = process.env.ETHERSCAN_API_KEY || "DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW";
+const etherscanApiKey = process.env.ETHERSCAN_API_KEY || "85UU6IZBVUHJWHITKYEHZ3MRRSJS11UWT6";
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -51,7 +51,8 @@ const config: HardhatUserConfig = {
       accounts: [deployerPrivateKey],
     },
     sepolia: {
-      url: `https://eth-sepolia.g.alchemy.com/v2/${providerApiKey}`,
+      // url: `https://eth-sepolia.g.alchemy.com/v2/${providerApiKey}`,
+      url: "https://eth-sepolia.g.alchemy.com/v2/RFiBHY2-HWqMY3wHC_lMpOKdJfji5EgY",
       accounts: [deployerPrivateKey],
     },
     goerli: {

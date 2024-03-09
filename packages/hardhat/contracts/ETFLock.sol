@@ -34,8 +34,8 @@ struct EventInfo {
     address contributor;
 }
 
-contract ETF  {
-	address public flareContractRegistry;
+contract ETFLock  {
+	address public evmVerifierOfFlareTransaction;
     Token[] requiredTokens;
     uint256 public chainId;
 
@@ -48,18 +48,20 @@ contract ETF  {
 
     mapping(uint256 => Vault) public vaults;
 
-    
-
     struct TransactionInfo {
     EVMTransaction.Proof originalTransaction;
     uint256 eventNumber;
     EventInfo[] eventInfo;
     }
 
-
-    constructor(address _flareContractRegistry, uint256 _chainId) {
-        flareContractRegistry = _flareContractRegistry;
+    constructor(address _evmVerifierOfFlareTransaction, uint256 _chainId,
+        Token[] memory _requiredTokens)
+    {
+        evmVerifierOfFlareTransaction = _evmVerifierOfFlareTransaction;
         chainId = _chainId;
+        for (uint256 i = 0; i < _requiredTokens.length; i++) {
+            requiredTokens.push(_requiredTokens[i]);
+        }
     }
 
 
@@ -81,7 +83,10 @@ contract ETF  {
     )
         public
     {
-        require(vaults[_vaultId].state == VaultState.OPEN, "Vault is not open");
+        require(vaults[_vaultId].state == VaultState.OPEN
+            || vaults[_vaultId].state == VaultState.EMPTY,
+            "Vault is not open or empty"
+        );
         for (uint256 i = 0; i < _tokens.length; i++) {
         IERC20(_tokens[i]._address).transferFrom(
             _tokens[i]._contributor,

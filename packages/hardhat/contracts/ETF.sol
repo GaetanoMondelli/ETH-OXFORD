@@ -28,7 +28,7 @@ enum VaultState {
 }
 
 contract ETF  {
-	address public flareContractRegistry;
+	address public evmTransactionVerifier;
     Token[] requiredTokens;
     uint256 public chainId;
     address etfToken;
@@ -49,13 +49,18 @@ struct TransactionInfo {
     EventInfo[] eventInfo;
 }
 
-    constructor(address _flareContractRegistry, uint256 _chainId,
-        address _etfToken, uint256 _etfTokenPerVault) 
+    constructor(address _evmTransactionVerifier, uint256 _chainId,
+        address _etfToken, uint256 _etfTokenPerVault,
+        Token[] memory _requiredTokens
+        ) 
     {
-        flareContractRegistry = _flareContractRegistry;
+        evmTransactionVerifier = _evmTransactionVerifier; // this one should check flare transactions
         chainId = _chainId;
         etfToken = _etfToken;
         etfTokenPerVault = _etfTokenPerVault;
+        for (uint256 i = 0; i < _requiredTokens.length; i++) {
+            requiredTokens.push(_requiredTokens[i]);
+        }
     }
 
     function getVaultStates()
