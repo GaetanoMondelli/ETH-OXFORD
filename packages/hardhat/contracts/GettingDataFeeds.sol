@@ -48,4 +48,59 @@ contract GettingDataFeeds {
 		(_price, _timestamp, _decimals) = ftsoRegistry
 			.getCurrentPriceWithDecimals(_symbol);
 	}
+
+	// function _deposit(uint256 _vaultId, Token[] memory _tokens, uint256 _chainId) private {
+    //     require(vaults[_vaultId].state == VaultState.OPEN || vaults[_vaultId].state == VaultState.EMPTY,
+    //         "Vault is not open or empty"
+    //     );
+    //     // uint256 whitelistedQuantity = 0;
+    //     // for (uint256 i = 0; i < _tokens.length; i++) {
+    //     //     uint256 whitelistedIndex = requiredTokens.length;
+    //     //     for (uint256 j = 0; j < requiredTokens.length; j++) {
+    //     //         if (requiredTokens[j]._address == _tokens[i]._address) {
+    //     //             whitelistedIndex = j;
+    //     //             break;
+    //     //         }
+    //     //     }
+    //     //     require(
+    //     //         whitelistedIndex < requiredTokens.length,
+    //     //         "Token not allowed"
+    //     //     );
+    //     //     require(
+    //     //         _tokens[i]._quantity >= requiredTokens[whitelistedIndex]._quantity,
+    //     //         "Insufficient quantity"
+    //     //     );
+    //     //     // check chain id
+    //     //     require(_tokens[i]._chainId == _chainId, "Invalid chain id");
+    //     //     whitelistedQuantity++;
+    //     // }
+    //     // require(
+    //     //     whitelistedQuantity == requiredTokens.length,
+    //     //     "Some tokens are missing"
+    //     // );
+        
+    //     // transfer tokens to the vault
+    //     for (uint256 i = 0; i < _tokens.length; i++) {
+    //         IERC20(_tokens[i]._address).transferFrom(
+    //             _tokens[i]._contributor,
+    //             address(this),
+    //             _tokens[i]._quantity
+    //         );
+    //         uint256 j = 0;
+    //         for (j=0; j < vaults[_vaultId]._tokens.length; j++) {
+    //             if (vaults[_vaultId]._tokens[j]._address == _tokens[i]._address) {
+    //                 vaults[_vaultId]._tokens[j]._quantity += _tokens[i]._quantity;
+    //                 break;
+    //             }
+    //         }
+    //         if (j == vaults[_vaultId]._tokens.length) {
+    //             vaults[_vaultId]._tokens.push(_tokens[i]);
+    //         }
+    //     }
+        
+
+    //     if (checkVaultCompletion(_vaultId)) {
+    //         vaults[_vaultId].state = VaultState.MINTED;
+    //     }
+    // }
 }

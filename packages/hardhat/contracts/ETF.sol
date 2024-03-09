@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import { CollateralVault } from "./Collateral.sol";
+import { IETFToken } from "./ETNToken.sol";
 import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {EVMTransaction} from "@flarenetwork/flare-periphery-contracts/coston/stateConnector/interface/EVMTransaction.sol";
@@ -31,7 +31,8 @@ contract ETF  {
 	address public flareContractRegistry;
     Token[] requiredTokens;
     uint256 public chainId;
-    
+    address etfToken;
+    uint256 etfTokenPerVault;
 
     mapping(uint256 => Vault) public vaults;
     
@@ -40,7 +41,6 @@ contract ETF  {
     uint256 quantity;
     uint256 chainId;
     address contributor;
-    // bytes data;
     }
 
 struct TransactionInfo {
@@ -49,9 +49,13 @@ struct TransactionInfo {
     EventInfo[] eventInfo;
 }
 
-    constructor(address _flareContractRegistry, uint256 _chainId) {
+    constructor(address _flareContractRegistry, uint256 _chainId,
+        address _etfToken, uint256 _etfTokenPerVault) 
+    {
         flareContractRegistry = _flareContractRegistry;
         chainId = _chainId;
+        etfToken = _etfToken;
+        etfTokenPerVault = _etfTokenPerVault;
     }
 
     function getVaultStates()
@@ -102,31 +106,6 @@ struct TransactionInfo {
         require(vaults[_vaultId].state == VaultState.OPEN || vaults[_vaultId].state == VaultState.EMPTY,
             "Vault is not open or empty"
         );
-        uint256 whitelistedQuantity = 0;
-        for (uint256 i = 0; i < _tokens.length; i++) {
-            uint256 whitelistedIndex = requiredTokens.length;
-            for (uint256 j = 0; j < requiredTokens.length; j++) {
-                if (requiredTokens[j]._address == _tokens[i]._address) {
-                    whitelistedIndex = j;
-                    break;
-                }
-            }
-            require(
-                whitelistedIndex < requiredTokens.length,
-                "Token not allowed"
-            );
-            require(
-                _tokens[i]._quantity >= requiredTokens[whitelistedIndex]._quantity,
-                "Insufficient quantity"
-            );
-            // check chain id
-            require(_tokens[i]._chainId == _chainId, "Invalid chain id");
-            whitelistedQuantity++;
-        }
-        require(
-            whitelistedQuantity == requiredTokens.length,
-            "Some tokens are missing"
-        );
         
         // transfer tokens to the vault
         for (uint256 i = 0; i < _tokens.length; i++) {
@@ -150,6 +129,9 @@ struct TransactionInfo {
 
         if (checkVaultCompletion(_vaultId)) {
             vaults[_vaultId].state = VaultState.MINTED;
+            // easy scenario one owner per vault
+            IETFToken(etfToken).mint(msg.sender, 
+                etfTokenPerVault);
         }
     }
 
