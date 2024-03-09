@@ -15,14 +15,6 @@ import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { getParsedError, notification } from "~~/utils/scaffold-eth";
 import { getAllContracts } from "~~/utils/scaffold-eth/contractsData";
 
-// import { DebugContracts } from "./_components/DebugContracts";
-
-// import { DebugContracts } from "./_components/DebugContracts";
-
-// import { DebugContracts } from "./_components/DebugContracts";
-
-// import { DebugContracts } from "./_components/DebugContracts";
-
 const Broker: NextPage = () => {
   const initialCollateralAmount = 1;
 
@@ -112,7 +104,7 @@ const Broker: NextPage = () => {
         ) : null}
 
         <br></br>
-        <CollateralVaultView bundleId={"1"} />
+        <CollateralVaultView bundleId={bundleId} />
       </div>
     </>
   );

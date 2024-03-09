@@ -1,20 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useContractRead } from "wagmi";
 import { displayTxResult } from "~~/app/debug/_components/contract";
 import { getParsedError } from "~~/utils/scaffold-eth";
 import { getAllContracts } from "~~/utils/scaffold-eth/contractsData";
 
-export function CollateralVaultView({ bundleId }: { bundleId: Array<any> }) {
+export function CollateralVaultView({ bundleId }: { bundleId: string }) {
   const contractsData = getAllContracts();
-    const [data, setData] = useState<any>();
+  const [data, setData] = useState<any>();
 
   const { isFetching, refetch } = useContractRead({
     address: contractsData["Broker"].address,
-    functionName: "fee",
+    functionName: "ownerOf",
     abi: contractsData["Broker"].abi,
-    args: [],
+    args: [bundleId],
     enabled: false,
     onError: (error: any) => {
       const parsedErrror = getParsedError(error);
@@ -22,11 +22,24 @@ export function CollateralVaultView({ bundleId }: { bundleId: Array<any> }) {
     },
   });
 
+  useEffect(() => {
+    async function fetchData() {
+      if (isFetching) {
+        return;
+      }
+      if (refetch) {
+        const { data } = await refetch();
+        setData(data);
+      }
+    }
+    fetchData();
+  }, [bundleId]);
+
   return (
     <div>
-      <h2>Collateral Vault</h2>
+      <h1>Collateral Vault</h1>
       <p>Bundle ID: {bundleId}</p>
-      <button
+      {/* <button
         onClick={async () => {
           const { data } = await refetch();
           setData(data);
@@ -34,8 +47,9 @@ export function CollateralVaultView({ bundleId }: { bundleId: Array<any> }) {
         }}
         disabled={isFetching}
       >
-        Fetch
-      </button>
+        getOwner
+      </button> */}
+      {isFetching && <p>Loading...</p>}
       {data !== null && data !== undefined && <p>{displayTxResult(data)}</p>}
       <br></br>
     </div>
