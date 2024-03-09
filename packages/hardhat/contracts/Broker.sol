@@ -19,8 +19,6 @@ contract Broker is IERC721 {
 	address public owner;
 	uint256 public fee;
 
-	// uint256 vaultId = 0;
-
 	constructor(
 		address _flareContractRegistry,
 		string memory _symbolCollateral,
@@ -34,6 +32,24 @@ contract Broker is IERC721 {
 		lockingPeriod = _lockingPeriod;
 		fee = _fee;
 		owner = msg.sender;
+	}
+
+	function getVaultOverview(uint256 vaultId) public view returns (address, uint256, uint256, uint256, uint256, uint256, uint256) {
+		CollateralVault vault = CollateralVault(vaults[vaultId]);
+		
+		if (owners[vaultId] == address(0)) {
+			return (address(0), 0, 0, 0, 0, 0, 0);
+		}
+
+		return (
+			owners[vaultId],
+			vault.amountCollateral(),
+			vault.syntethicTokenBalance(),
+			vault.mintSyntheticPrice(),
+			vault.collateralRatio(),
+			vault.lockingPeriod(),
+			vault.mintCollateralPrice()
+		);
 	}
 
 	function openVault(
@@ -66,6 +82,9 @@ contract Broker is IERC721 {
 		vaults[vaultId] = address(vault);
 		vaultsByOwner[msg.sender].push(vaultId);
 	}
+
+
+	
 
 	function supportsInterface(
 		bytes4 interfaceId
