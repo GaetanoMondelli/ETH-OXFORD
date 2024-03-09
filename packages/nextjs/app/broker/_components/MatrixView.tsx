@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import dynamic from "next/dynamic";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
@@ -11,9 +11,16 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 //   const color = colors[Math.floor(Math.random() * colors.length)];
 //   return color;
 // }
-export function MatrixView({ bundles }: { bundles: Array<any> }) {
+export function MatrixView({
+  bundles,
+  bundleId,
+  setBundleId,
+}: {
+  bundles: Array<any>;
+  bundleId: any;
+  setBundleId: any;
+}) {
   const series: { name: string; data: any[] }[] = [];
-  const [bundleId, setBundleId] = useState<number>();
   const numberOfColumns = 16; // Previously numberOfRows
   const numberOfRows = 6; // Previously numberOfColumns
 
@@ -26,11 +33,14 @@ export function MatrixView({ bundles }: { bundles: Array<any> }) {
     for (let colIndex = 0; colIndex < numberOfColumns; colIndex++) {
       // Invert the row index to start from the bottom
       const cellValue = rowIndex * numberOfColumns + colIndex;
-      const cellColor = "#D3D3D3"; // Assign a random color
+      let cellColor = "#D3D3D3"; // Assign a random color
+      if (cellValue === Number(bundleId)) {
+        cellColor = "#FF0000";
+      }
       rowData.data.push({
         x: `Col ${colIndex + 1}`,
         y: cellValue,
-        fillColor: cellColor, // Add the random color here
+        fillColor: cellColor,
       });
     }
     series.push(rowData);

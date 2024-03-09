@@ -3,8 +3,10 @@
 
 import { useEffect, useState } from "react";
 import { TxReceipt, displayTxResult } from "../debug/_components/contract";
+import { CollateralVaultView } from "./_components/CollateralVault";
 import { MatrixView } from "./_components/MatrixView";
 import "./index.css";
+import { BigNumber } from "@ethersproject/bignumber";
 import type { NextPage } from "next";
 import { TransactionReceipt } from "viem";
 import { useContractRead, useContractWrite, useNetwork, useWaitForTransaction } from "wagmi";
@@ -12,7 +14,12 @@ import { useTransactor } from "~~/hooks/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { getParsedError, notification } from "~~/utils/scaffold-eth";
 import { getAllContracts } from "~~/utils/scaffold-eth/contractsData";
-import { BigNumber } from "@ethersproject/bignumber";
+
+// import { DebugContracts } from "./_components/DebugContracts";
+
+// import { DebugContracts } from "./_components/DebugContracts";
+
+// import { DebugContracts } from "./_components/DebugContracts";
 
 // import { DebugContracts } from "./_components/DebugContracts";
 
@@ -23,6 +30,7 @@ const Broker: NextPage = () => {
   const collateralAmountFee = collateralAmount.mul(2).div(100).add(collateralAmount);
 
   const contractsData = getAllContracts();
+  const [bundleId, setBundleId] = useState<string>("1");
   const [resultFee, setResultFee] = useState<any>();
   const [resultOV, setResultOV] = useState<any>();
   const [txValue, setTxValue] = useState<string | bigint>("");
@@ -88,33 +96,8 @@ const Broker: NextPage = () => {
         }}
         className="card"
       >
-        <h1 className="text-4xl my-0">Example</h1>
-        <MatrixView
-          //   contracts={contracts}
-          bundles={[]}
-          //   address="0x1234567890"
-          //   bundleState={{}}
-          //   bundleStateLoading={false}
-          //   bundleId={0}
-          //   bundleStateError={null}
-          //   setBundleId={null}
-          //   requiredTokenStructs={{}}
-        />
-        <p>Test call</p>
-        {contractsData["Broker"].address}
-        {isFetching ? "Fetching..." : "Not fetching"}
-        <button
-          onClick={async () => {
-            const { data } = await refetch();
-            setResultFee(data);
-            console.log(data);
-          }}
-          disabled={isFetching}
-        >
-          Fetch
-        </button>
-        {resultFee !== null && resultFee !== undefined && <p>{displayTxResult(result)}</p>}
-        <br></br>
+        <h1 className="text-4xl my-0">Example {bundleId}</h1>
+        <MatrixView setBundleId={setBundleId} bundleId={bundleId} bundles={[]} />
 
         <p>Test call</p>
 
@@ -127,6 +110,9 @@ const Broker: NextPage = () => {
             {displayedTxResult ? <TxReceipt txResult={displayedTxResult} /> : null}
           </div>
         ) : null}
+
+        <br></br>
+        <CollateralVaultView bundleId={"1"} />
       </div>
     </>
   );
