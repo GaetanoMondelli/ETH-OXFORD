@@ -20,8 +20,8 @@ const deployerPrivateKey =
 const etherscanApiKey = process.env.ETHERSCAN_API_KEY || "85UU6IZBVUHJWHITKYEHZ3MRRSJS11UWT6";
 
 const FLARE_RPC_API_KEY = "123456";
-const FLARESCAN_API_KEY = "123456";
-
+const FLARESCAN_API_KEY = "irrelevant";
+const FLARE_EXPLORER_API_KEY="TODO"
 const config: HardhatUserConfig = {
   solidity: {
     version: "0.8.17",

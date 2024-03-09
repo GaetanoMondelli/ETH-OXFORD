@@ -3,6 +3,13 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { Contract, ethers } from "ethers";
 import { BigNumber } from "@ethersproject/bignumber";
 import fs from "fs";
+// read JSON file
+
+const sepoliaChainId = BigNumber.from(31337);
+const overChainAddress = "0xFCb7E64A67dFAb710c3064e097B50B1d93898E71";
+const uniSwapAddress = "0x60a0F6a9952061A78E903B98e5452A996FD4233c";
+const costonChainId = BigNumber.from(16);
+
 /**
  * Deploys a contract named "YourContract" using the deployer account and
  * constructor arguments set to the deployer address
@@ -19,6 +26,159 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
 
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
+
+  if (hre.network.name === "coston") {
+    const etfAddress = "0x5fb202C83294787B6A36Dfb53D643eD27128d69f";
+    // const etf = await hre.ethers.getContractAt("ETF", etfAddress);
+
+    await deploy("SimpleERC20", {
+      from: deployer,
+      args: ["ETFToken", "ETF"],
+      log: true,
+      autoMine: true,
+    });
+
+    const etfToken = await hre.ethers.getContract<Contract>("SimpleERC20", deployer);
+    const etfTokenAddress = await etfToken.getAddress();
+    
+    await deploy("ETF", {
+      from: deployer,
+      log: true,
+      autoMine: true,
+      args: [
+        costonChainId,
+        etfTokenAddress,
+        100,
+        [
+          {
+            _address: overChainAddress,
+            _quantity: BigNumber.from(50).toString(),
+            _chainId: sepoliaChainId.toString(),
+            _contributor: deployer,
+          },
+          {
+            _address: uniSwapAddress,
+            _quantity: BigNumber.from(100).toString(),
+            _chainId: sepoliaChainId.toString(),
+            _contributor: deployer,
+          },
+        ],
+      ],
+    });
+
+    const etf = await hre.ethers.getContract<Contract>("ETF", deployer);
+
+    const data = fs.readFileSync("/Users/gaetano/dev/flare_training/packages/hardhat/scripts/evmproof.json");
+    const proof = JSON.parse(data.toString());
+    console.log("Deploying ETF Lock contract");
+    console.log(proof);
+    const chainId = await etf.chainId();
+    console.log("ChainId: ", chainId.toString());
+    await etf.checkExternalDeposit(proof);
+  }
+
+  if (hre.network.name === "coston" && false) {
+    await deploy("SimpleERC20", {
+      from: deployer,
+      args: ["ETFToken", "ETF"],
+      log: true,
+      autoMine: true,
+    });
+
+    const etfToken = await hre.ethers.getContract<Contract>("SimpleERC20", deployer);
+    const etfTokenAddress = await etfToken.getAddress();
+
+    await hre.run("verify:verify", {
+      address: etfTokenAddress,
+      constructorArguments: ["ETFToken", "ETF"],
+    });
+
+    const sepoliaChainId = BigNumber.from(31337);
+    const overChainAddress = "0xFCb7E64A67dFAb710c3064e097B50B1d93898E71";
+    const uniSwapAddress = "0x60a0F6a9952061A78E903B98e5452A996FD4233c";
+    const costonChainId = BigNumber.from(16);
+
+    // etfToken =  "0x60a0F6a9952061A78E903B98e5452A996FD4233c";
+
+    await deploy("SimpleERC20", {
+      from: deployer,
+      args: ["PEPE TOKEN", "PEPE"],
+      log: true,
+      autoMine: true,
+    });
+
+    const pepeToken = await hre.ethers.getContract<Contract>("SimpleERC20", deployer);
+    const pepeTokenAddress = await pepeToken.getAddress();
+
+    await hre.run("verify:verify", {
+      address: pepeTokenAddress,
+      constructorArguments: ["PEPE TOKEN", "PEPE"],
+    });
+    // uint256 _chainId,
+    // address _etfToken, uint256 _etfTokenPerVault,
+    // Token[] memory _requiredTokens
+    console.log("Deploying ETF contract");
+    await deploy("ETF", {
+      from: deployer,
+      log: true,
+      autoMine: true,
+      args: [
+        costonChainId,
+        etfTokenAddress,
+        100,
+        [
+          {
+            _address: overChainAddress,
+            _quantity: BigNumber.from(50).toString(),
+            _chainId: sepoliaChainId.toString(),
+            _contributor: deployer,
+          },
+          {
+            _address: uniSwapAddress,
+            _quantity: BigNumber.from(100).toString(),
+            _chainId: sepoliaChainId.toString(),
+            _contributor: deployer,
+          },
+        ],
+      ],
+    });
+
+    const etf = await hre.ethers.getContract<Contract>("ETF", deployer);
+    const etfAddress = await etf.getAddress();
+
+    // const etfAddress = "0x2cE00d5a6F739a142C9A3E1E2eea363bC47fF7F2";
+    // const etf = await hre.ethers.getContractAt("ETF", etfAddress);
+
+    // const result = await etf.checkExternalDeposit(
+    //   data ? JSON.parse(data.toString()) : [],
+    // )
+
+    // verify the lock
+    await hre.run("verify:verify", {
+      address: etfAddress,
+      constructorArguments: [
+        costonChainId,
+        etfTokenAddress,
+        100,
+        [
+          {
+            _address: overChainAddress,
+            _quantity: BigNumber.from(50).toString(),
+            _chainId: sepoliaChainId.toString(),
+            _contributor: deployer,
+          },
+          {
+            _address: uniSwapAddress,
+            _quantity: BigNumber.from(100).toString(),
+            _chainId: sepoliaChainId.toString(),
+            _contributor: deployer,
+          },
+        ],
+      ],
+    });
+
+    console.log("Deployed ETF contract at ", etfAddress);
+  }
 
   // Let's start deploying the contrtacts on Sepolia
 
@@ -73,7 +233,6 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
 
     const overChainAddress = "0xFCb7E64A67dFAb710c3064e097B50B1d93898E71";
     const uniSwapAddress = "0x60a0F6a9952061A78E903B98e5452A996FD4233c";
-    // const etfTokenAddress =  "0x1d8177b9dF133B72c198c9CF184FB4265CCFb986";
 
     const evmVerifierOfFlareTransaction = "0x0bd4a6D3eFbB0aa8b191AE71E7dfF41c10fe8B9F";
     const sepoliaChainId = BigNumber.from(31337);

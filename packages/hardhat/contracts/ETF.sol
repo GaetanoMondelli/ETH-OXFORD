@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import { IETFToken } from "./ETNToken.sol";
+import { IETFToken } from "./SimpleERC20.sol";
 import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {EVMTransaction} from "@flarenetwork/flare-periphery-contracts/coston/stateConnector/interface/EVMTransaction.sol";
@@ -28,11 +28,11 @@ enum VaultState {
 }
 
 contract ETF  {
-	address public evmTransactionVerifier;
-    Token[] requiredTokens;
+	address public flareContractsRegistryLibrary;
+    Token[] public requiredTokens;
     uint256 public chainId;
-    address etfToken;
-    uint256 etfTokenPerVault;
+    address public etfToken;
+    uint256 public  etfTokenPerVault;
 
     mapping(uint256 => Vault) public vaults;
     
@@ -49,12 +49,14 @@ struct TransactionInfo {
     EventInfo[] eventInfo;
 }
 
-    constructor(address _evmTransactionVerifier, uint256 _chainId,
+    constructor(
+        // address _flareContractsRegistryLibrary, 
+        uint256 _chainId,
         address _etfToken, uint256 _etfTokenPerVault,
         Token[] memory _requiredTokens
         ) 
     {
-        evmTransactionVerifier = _evmTransactionVerifier; // this one should check flare transactions
+        // flareContractsRegistryLibrary = _flareContractsRegistryLibrary; // this one should check flare transactions
         chainId = _chainId;
         etfToken = _etfToken;
         etfTokenPerVault = _etfTokenPerVault;
@@ -108,9 +110,9 @@ struct TransactionInfo {
     }
 
     function _deposit(uint256 _vaultId, Token[] memory _tokens, uint256 _chainId) private {
-        require(vaults[_vaultId].state == VaultState.OPEN || vaults[_vaultId].state == VaultState.EMPTY,
-            "Vault is not open or empty"
-        );
+        // require(vaults[_vaultId].state == VaultState.OPEN || vaults[_vaultId].state == VaultState.EMPTY,
+        //     "Vault is not open or empty"
+        // );
         
         // transfer tokens to the vault
         for (uint256 i = 0; i < _tokens.length; i++) {
@@ -151,8 +153,12 @@ struct TransactionInfo {
         // EventInfo[] storage eventInfo = transactions[transactionIndex].eventInfo;
         Token[] memory tokens = new Token[](_transaction.data.responseBody.events.length);
         uint256 external_chainId;
+        bytes32 eventTopic = keccak256("Deposit(address,uint256,uint256,address)");
         for(uint256 i = 0; i < _transaction.data.responseBody.events.length; i++) {
             // (address sender, uint256 value, bytes memory data) = abi.decode(_transaction.data.responseBody.events[i].data, (address, uint256, bytes));
+            if (_transaction.data.responseBody.events[i].topics[0] != eventTopic) {
+                continue;
+            }
             (address _address, uint256 _quantity, uint256 _chainId, address _contributor) = abi.decode(_transaction.data.responseBody.events[i].data, (address, uint256, uint256, address));
             tokens[i] = Token(_address, _quantity, _chainId, _contributor);
             external_chainId = _chainId;

@@ -5,6 +5,1178 @@
 import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
 const deployedContracts = {
+  16: {
+    ETF: {
+      address: "0x128BF1143e51E18E85e22f7b7017a264c0949EaD",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_chainId",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "_etfToken",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "_etfTokenPerVault",
+              type: "uint256",
+            },
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "_address",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_quantity",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_chainId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "_contributor",
+                  type: "address",
+                },
+              ],
+              internalType: "struct Token[]",
+              name: "_requiredTokens",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          inputs: [],
+          name: "chainId",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              components: [
+                {
+                  internalType: "bytes32[]",
+                  name: "merkleProof",
+                  type: "bytes32[]",
+                },
+                {
+                  components: [
+                    {
+                      internalType: "bytes32",
+                      name: "attestationType",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "sourceId",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "votingRound",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "lowestUsedTimestamp",
+                      type: "uint64",
+                    },
+                    {
+                      components: [
+                        {
+                          internalType: "bytes32",
+                          name: "transactionHash",
+                          type: "bytes32",
+                        },
+                        {
+                          internalType: "uint16",
+                          name: "requiredConfirmations",
+                          type: "uint16",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "provideInput",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "listEvents",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "uint32[]",
+                          name: "logIndices",
+                          type: "uint32[]",
+                        },
+                      ],
+                      internalType: "struct EVMTransaction.RequestBody",
+                      name: "requestBody",
+                      type: "tuple",
+                    },
+                    {
+                      components: [
+                        {
+                          internalType: "uint64",
+                          name: "blockNumber",
+                          type: "uint64",
+                        },
+                        {
+                          internalType: "uint64",
+                          name: "timestamp",
+                          type: "uint64",
+                        },
+                        {
+                          internalType: "address",
+                          name: "sourceAddress",
+                          type: "address",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "isDeployment",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "address",
+                          name: "receivingAddress",
+                          type: "address",
+                        },
+                        {
+                          internalType: "uint256",
+                          name: "value",
+                          type: "uint256",
+                        },
+                        {
+                          internalType: "bytes",
+                          name: "input",
+                          type: "bytes",
+                        },
+                        {
+                          internalType: "uint8",
+                          name: "status",
+                          type: "uint8",
+                        },
+                        {
+                          components: [
+                            {
+                              internalType: "uint32",
+                              name: "logIndex",
+                              type: "uint32",
+                            },
+                            {
+                              internalType: "address",
+                              name: "emitterAddress",
+                              type: "address",
+                            },
+                            {
+                              internalType: "bytes32[]",
+                              name: "topics",
+                              type: "bytes32[]",
+                            },
+                            {
+                              internalType: "bytes",
+                              name: "data",
+                              type: "bytes",
+                            },
+                            {
+                              internalType: "bool",
+                              name: "removed",
+                              type: "bool",
+                            },
+                          ],
+                          internalType: "struct EVMTransaction.Event[]",
+                          name: "events",
+                          type: "tuple[]",
+                        },
+                      ],
+                      internalType: "struct EVMTransaction.ResponseBody",
+                      name: "responseBody",
+                      type: "tuple",
+                    },
+                  ],
+                  internalType: "struct EVMTransaction.Response",
+                  name: "data",
+                  type: "tuple",
+                },
+              ],
+              internalType: "struct EVMTransaction.Proof",
+              name: "_transaction",
+              type: "tuple",
+            },
+          ],
+          name: "checkExternalDeposit",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_vaultId",
+              type: "uint256",
+            },
+          ],
+          name: "checkVaultCompletion",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_vaultId",
+              type: "uint256",
+            },
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "_address",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_quantity",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_chainId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "_contributor",
+                  type: "address",
+                },
+              ],
+              internalType: "struct Token[]",
+              name: "_tokens",
+              type: "tuple[]",
+            },
+          ],
+          name: "deposit",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "etfToken",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "etfTokenPerVault",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "flareContractsRegistryLibrary",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_vaultId",
+              type: "uint256",
+            },
+          ],
+          name: "getVault",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "_address",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_quantity",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_chainId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "_contributor",
+                  type: "address",
+                },
+              ],
+              internalType: "struct Token[]",
+              name: "",
+              type: "tuple[]",
+            },
+            {
+              internalType: "enum VaultState",
+              name: "",
+              type: "uint8",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getVaultStates",
+          outputs: [
+            {
+              internalType: "enum VaultState[]",
+              name: "",
+              type: "uint8[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              components: [
+                {
+                  internalType: "bytes32[]",
+                  name: "merkleProof",
+                  type: "bytes32[]",
+                },
+                {
+                  components: [
+                    {
+                      internalType: "bytes32",
+                      name: "attestationType",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "sourceId",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "votingRound",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "lowestUsedTimestamp",
+                      type: "uint64",
+                    },
+                    {
+                      components: [
+                        {
+                          internalType: "bytes32",
+                          name: "transactionHash",
+                          type: "bytes32",
+                        },
+                        {
+                          internalType: "uint16",
+                          name: "requiredConfirmations",
+                          type: "uint16",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "provideInput",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "listEvents",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "uint32[]",
+                          name: "logIndices",
+                          type: "uint32[]",
+                        },
+                      ],
+                      internalType: "struct EVMTransaction.RequestBody",
+                      name: "requestBody",
+                      type: "tuple",
+                    },
+                    {
+                      components: [
+                        {
+                          internalType: "uint64",
+                          name: "blockNumber",
+                          type: "uint64",
+                        },
+                        {
+                          internalType: "uint64",
+                          name: "timestamp",
+                          type: "uint64",
+                        },
+                        {
+                          internalType: "address",
+                          name: "sourceAddress",
+                          type: "address",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "isDeployment",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "address",
+                          name: "receivingAddress",
+                          type: "address",
+                        },
+                        {
+                          internalType: "uint256",
+                          name: "value",
+                          type: "uint256",
+                        },
+                        {
+                          internalType: "bytes",
+                          name: "input",
+                          type: "bytes",
+                        },
+                        {
+                          internalType: "uint8",
+                          name: "status",
+                          type: "uint8",
+                        },
+                        {
+                          components: [
+                            {
+                              internalType: "uint32",
+                              name: "logIndex",
+                              type: "uint32",
+                            },
+                            {
+                              internalType: "address",
+                              name: "emitterAddress",
+                              type: "address",
+                            },
+                            {
+                              internalType: "bytes32[]",
+                              name: "topics",
+                              type: "bytes32[]",
+                            },
+                            {
+                              internalType: "bytes",
+                              name: "data",
+                              type: "bytes",
+                            },
+                            {
+                              internalType: "bool",
+                              name: "removed",
+                              type: "bool",
+                            },
+                          ],
+                          internalType: "struct EVMTransaction.Event[]",
+                          name: "events",
+                          type: "tuple[]",
+                        },
+                      ],
+                      internalType: "struct EVMTransaction.ResponseBody",
+                      name: "responseBody",
+                      type: "tuple",
+                    },
+                  ],
+                  internalType: "struct EVMTransaction.Response",
+                  name: "data",
+                  type: "tuple",
+                },
+              ],
+              internalType: "struct EVMTransaction.Proof",
+              name: "transaction",
+              type: "tuple",
+            },
+          ],
+          name: "isEVMTransactionProofValid",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "requiredTokens",
+          outputs: [
+            {
+              internalType: "address",
+              name: "_address",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "_quantity",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "_chainId",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "_contributor",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "transactions",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "bytes32[]",
+                  name: "merkleProof",
+                  type: "bytes32[]",
+                },
+                {
+                  components: [
+                    {
+                      internalType: "bytes32",
+                      name: "attestationType",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "sourceId",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "votingRound",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "lowestUsedTimestamp",
+                      type: "uint64",
+                    },
+                    {
+                      components: [
+                        {
+                          internalType: "bytes32",
+                          name: "transactionHash",
+                          type: "bytes32",
+                        },
+                        {
+                          internalType: "uint16",
+                          name: "requiredConfirmations",
+                          type: "uint16",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "provideInput",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "listEvents",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "uint32[]",
+                          name: "logIndices",
+                          type: "uint32[]",
+                        },
+                      ],
+                      internalType: "struct EVMTransaction.RequestBody",
+                      name: "requestBody",
+                      type: "tuple",
+                    },
+                    {
+                      components: [
+                        {
+                          internalType: "uint64",
+                          name: "blockNumber",
+                          type: "uint64",
+                        },
+                        {
+                          internalType: "uint64",
+                          name: "timestamp",
+                          type: "uint64",
+                        },
+                        {
+                          internalType: "address",
+                          name: "sourceAddress",
+                          type: "address",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "isDeployment",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "address",
+                          name: "receivingAddress",
+                          type: "address",
+                        },
+                        {
+                          internalType: "uint256",
+                          name: "value",
+                          type: "uint256",
+                        },
+                        {
+                          internalType: "bytes",
+                          name: "input",
+                          type: "bytes",
+                        },
+                        {
+                          internalType: "uint8",
+                          name: "status",
+                          type: "uint8",
+                        },
+                        {
+                          components: [
+                            {
+                              internalType: "uint32",
+                              name: "logIndex",
+                              type: "uint32",
+                            },
+                            {
+                              internalType: "address",
+                              name: "emitterAddress",
+                              type: "address",
+                            },
+                            {
+                              internalType: "bytes32[]",
+                              name: "topics",
+                              type: "bytes32[]",
+                            },
+                            {
+                              internalType: "bytes",
+                              name: "data",
+                              type: "bytes",
+                            },
+                            {
+                              internalType: "bool",
+                              name: "removed",
+                              type: "bool",
+                            },
+                          ],
+                          internalType: "struct EVMTransaction.Event[]",
+                          name: "events",
+                          type: "tuple[]",
+                        },
+                      ],
+                      internalType: "struct EVMTransaction.ResponseBody",
+                      name: "responseBody",
+                      type: "tuple",
+                    },
+                  ],
+                  internalType: "struct EVMTransaction.Response",
+                  name: "data",
+                  type: "tuple",
+                },
+              ],
+              internalType: "struct EVMTransaction.Proof",
+              name: "originalTransaction",
+              type: "tuple",
+            },
+            {
+              internalType: "uint256",
+              name: "eventNumber",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "vaults",
+          outputs: [
+            {
+              internalType: "enum VaultState",
+              name: "state",
+              type: "uint8",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {},
+    },
+    SimpleERC20: {
+      address: "0x379f55d1c88C41Cb449dC8Cb664fE5a4490e9049",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "name",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "symbol",
+              type: "string",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          inputs: [],
+          name: "OwnableUnauthorized",
+          type: "error",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "spender",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "value",
+              type: "uint256",
+            },
+          ],
+          name: "Approval",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "prevOwner",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "newOwner",
+              type: "address",
+            },
+          ],
+          name: "OwnerUpdated",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "from",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "to",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "value",
+              type: "uint256",
+            },
+          ],
+          name: "Transfer",
+          type: "event",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "spender",
+              type: "address",
+            },
+          ],
+          name: "allowance",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "spender",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "amount",
+              type: "uint256",
+            },
+          ],
+          name: "approve",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+          ],
+          name: "balanceOf",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "amount",
+              type: "uint256",
+            },
+          ],
+          name: "burn",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "decimals",
+          outputs: [
+            {
+              internalType: "uint8",
+              name: "",
+              type: "uint8",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "spender",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "subtractedValue",
+              type: "uint256",
+            },
+          ],
+          name: "decreaseAllowance",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "spender",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "addedValue",
+              type: "uint256",
+            },
+          ],
+          name: "increaseAllowance",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "amount",
+              type: "uint256",
+            },
+          ],
+          name: "mint",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "name",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "owner",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_newOwner",
+              type: "address",
+            },
+          ],
+          name: "setOwner",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "symbol",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "totalSupply",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "to",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "amount",
+              type: "uint256",
+            },
+          ],
+          name: "transfer",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "from",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "to",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "amount",
+              type: "uint256",
+            },
+          ],
+          name: "transferFrom",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {
+        allowance:
+          "@thirdweb-dev/contracts/external-deps/openzeppelin/token/ERC20/ERC20.sol",
+        approve:
+          "@thirdweb-dev/contracts/external-deps/openzeppelin/token/ERC20/ERC20.sol",
+        balanceOf:
+          "@thirdweb-dev/contracts/external-deps/openzeppelin/token/ERC20/ERC20.sol",
+        decimals:
+          "@thirdweb-dev/contracts/external-deps/openzeppelin/token/ERC20/ERC20.sol",
+        decreaseAllowance:
+          "@thirdweb-dev/contracts/external-deps/openzeppelin/token/ERC20/ERC20.sol",
+        increaseAllowance:
+          "@thirdweb-dev/contracts/external-deps/openzeppelin/token/ERC20/ERC20.sol",
+        name: "@thirdweb-dev/contracts/external-deps/openzeppelin/token/ERC20/ERC20.sol",
+        symbol:
+          "@thirdweb-dev/contracts/external-deps/openzeppelin/token/ERC20/ERC20.sol",
+        totalSupply:
+          "@thirdweb-dev/contracts/external-deps/openzeppelin/token/ERC20/ERC20.sol",
+        transfer:
+          "@thirdweb-dev/contracts/external-deps/openzeppelin/token/ERC20/ERC20.sol",
+        transferFrom:
+          "@thirdweb-dev/contracts/external-deps/openzeppelin/token/ERC20/ERC20.sol",
+        owner: "@thirdweb-dev/contracts/extension/Ownable.sol",
+        setOwner: "@thirdweb-dev/contracts/extension/Ownable.sol",
+      },
+    },
+  },
   114: {
     GettingDataFeeds: {
       address: "0xdE617C9DaDDF41EbD739cA57eBbA607C11ba902d",
@@ -1854,8 +3026,186 @@ const deployedContracts = {
         transferFrom: "@openzeppelin/contracts/token/ERC721/IERC721.sol",
       },
     },
+    ETFLock: {
+      address: "0x2cE00d5a6F739a142C9A3E1E2eea363bC47fF7F2",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_evmVerifierOfFlareTransaction",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "_chainId",
+              type: "uint256",
+            },
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "_address",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_quantity",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_chainId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "_contributor",
+                  type: "address",
+                },
+              ],
+              internalType: "struct Token[]",
+              name: "_requiredTokens",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "address",
+              name: "_address",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "_quantity",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "_chainId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "_contributor",
+              type: "address",
+            },
+          ],
+          name: "Deposit",
+          type: "event",
+        },
+        {
+          inputs: [],
+          name: "chainId",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_vaultId",
+              type: "uint256",
+            },
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "_address",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_quantity",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_chainId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "_contributor",
+                  type: "address",
+                },
+              ],
+              internalType: "struct Token[]",
+              name: "_tokens",
+              type: "tuple[]",
+            },
+          ],
+          name: "depositLock",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "evmVerifierOfFlareTransaction",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getVaultStates",
+          outputs: [
+            {
+              internalType: "enum VaultState[]",
+              name: "",
+              type: "uint8[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "vaults",
+          outputs: [
+            {
+              internalType: "enum VaultState",
+              name: "state",
+              type: "uint8",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {},
+    },
     SimpleERC20: {
-      address: "0x7eBA9F2dAb2d51dA19b962b8AfD5780d8C26c19d",
+      address: "0x1d8177b9dF133B72c198c9CF184FB4265CCFb986",
       abi: [
         {
           inputs: [

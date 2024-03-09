@@ -7,7 +7,7 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import "@flarenetwork/flare-periphery-contracts/flare/util-contracts/userInterfaces/IFlareContractRegistry.sol";
 import "@flarenetwork/flare-periphery-contracts/flare/ftso/userInterfaces/IFtsoRegistry.sol";
 import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
-import { IETFToken } from "./ETNToken.sol";
+import { IETFToken } from "./SimpleERC20.sol";
 import { console } from "hardhat/console.sol";
 
 address constant NATIVE_TOKEN = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
