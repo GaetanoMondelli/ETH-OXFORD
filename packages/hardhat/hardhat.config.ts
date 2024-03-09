@@ -19,6 +19,9 @@ const deployerPrivateKey =
 // If not set, it uses ours Etherscan default API key.
 const etherscanApiKey = process.env.ETHERSCAN_API_KEY || "85UU6IZBVUHJWHITKYEHZ3MRRSJS11UWT6";
 
+const FLARE_RPC_API_KEY = "123456";
+const FLARESCAN_API_KEY = "123456";
+
 const config: HardhatUserConfig = {
   solidity: {
     version: "0.8.17",
@@ -45,6 +48,16 @@ const config: HardhatUserConfig = {
         url: `https://eth-mainnet.alchemyapi.io/v2/${providerApiKey}`,
         enabled: process.env.MAINNET_FORKING_ENABLED === "true",
       },
+    },
+    coston: {
+      url: "https://coston-api.flare.network/ext/bc/C/rpc" + (FLARE_RPC_API_KEY ? `?x-apikey=${FLARE_RPC_API_KEY}` : ""),
+      accounts: [deployerPrivateKey],
+      chainId: 16
+    },
+    coston2: {
+      url: "https://coston2-api.flare.network/ext/C/rpc" + (FLARE_RPC_API_KEY ? `?x-apikey=${FLARE_RPC_API_KEY}` : ""),
+      accounts: [deployerPrivateKey],
+      chainId: 114
     },
     mainnet: {
       url: `https://eth-mainnet.alchemyapi.io/v2/${providerApiKey}`,
@@ -130,7 +143,51 @@ const config: HardhatUserConfig = {
   },
   // configuration for harhdat-verify plugin
   etherscan: {
-    apiKey: `${etherscanApiKey}`,
+    // apiKey: `${etherscanApiKey}`,
+    apiKey: {
+      "goerli": `${etherscanApiKey}`,
+      "coston": `${FLARESCAN_API_KEY}`,
+      "coston2": `${FLARESCAN_API_KEY}`,
+      "songbird": `${FLARESCAN_API_KEY}`,
+      "flare": `${FLARESCAN_API_KEY}`,
+      "sepolia": `${etherscanApiKey}`,
+    },
+    customChains: [
+      {
+        network: "coston",
+        chainId: 16,
+        urls: {
+          // faucet: https://faucet.towolabs.com/
+          apiURL: "https://coston-explorer.flare.network/api" + (FLARE_EXPLORER_API_KEY ? `?x-apikey=${FLARE_EXPLORER_API_KEY}` : ""), // Must not have / endpoint
+          browserURL: "https://coston-explorer.flare.network"
+        }
+      },
+      {
+        network: "coston2",
+        chainId: 114,
+        urls: {
+          // faucet: https://coston2-faucet.towolabs.com/
+          apiURL: "https://coston2-explorer.flare.network/api" + (FLARE_EXPLORER_API_KEY ? `?x-apikey=${FLARE_EXPLORER_API_KEY}` : ""), // Must not have / endpoint
+          browserURL: "https://coston2-explorer.flare.network"
+        }
+      },
+      {
+        network: "songbird",
+        chainId: 19,
+        urls: {
+          apiURL: "https://songbird-explorer.flare.network/api" + (FLARE_EXPLORER_API_KEY ? `?x-apikey=${FLARE_EXPLORER_API_KEY}` : ""), // Must not have / endpoint
+          browserURL: "https://songbird-explorer.flare.network/"
+        }
+      },
+      {
+        network: "flare",
+        chainId: 14,
+        urls: {
+          apiURL: "https://flare-explorer.flare.network/api" + (FLARE_EXPLORER_API_KEY ? `?x-apikey=${FLARE_EXPLORER_API_KEY}` : ""), // Must not have / endpoint
+          browserURL: "https://flare-explorer.flare.network/",
+        }
+      }
+    ]
   },
   // configuration for etherscan-verify from hardhat-deploy plugin
   verify: {
