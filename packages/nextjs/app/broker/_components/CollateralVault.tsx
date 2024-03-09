@@ -12,7 +12,7 @@ export function CollateralVaultView({ bundleId }: { bundleId: string }) {
 
   const { isFetching, refetch } = useContractRead({
     address: contractsData["Broker"].address,
-    functionName: "ownerOf",
+    functionName: "getVaultOverview",
     abi: contractsData["Broker"].abi,
     args: [bundleId],
     enabled: false,
@@ -50,7 +50,22 @@ export function CollateralVaultView({ bundleId }: { bundleId: string }) {
         getOwner
       </button> */}
       {isFetching && <p>Loading...</p>}
-      {data !== null && data !== undefined && <p>{displayTxResult(data)}</p>}
+      {data !== null && data !== undefined && (
+        <>
+          {/* <p>{displayTxResult(data)}</p> */}
+          <p>Owner</p>
+          <p>{displayTxResult(data[0])}</p>
+          <p>Collateral (FLR)</p>
+          <p>{displayTxResult(data[1])}</p>
+          <p>Synthtic (testBTC)</p>
+          <p>{Number(displayTxResult(data[2]))/1000000000000000000}</p>
+          <p>Mint Prize</p>
+          <p>{Number(displayTxResult(data[3]))/100000} $</p>
+          <p>Collateral Ratio</p>
+          <p>{displayTxResult(data[4])}</p>
+
+        </>
+      )}
       <br></br>
     </div>
   );

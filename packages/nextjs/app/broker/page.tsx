@@ -88,7 +88,7 @@ const Broker: NextPage = () => {
         }}
         className="card"
       >
-        <h1 className="text-4xl my-0">Example {bundleId}</h1>
+        <h1 className="text-4xl my-0">Collateral {bundleId}</h1>
         <MatrixView setBundleId={setBundleId} bundleId={bundleId} bundles={[]} />
 
         <p>Test call</p>
