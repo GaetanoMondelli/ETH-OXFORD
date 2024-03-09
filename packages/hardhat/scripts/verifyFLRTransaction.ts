@@ -1,6 +1,6 @@
 import flareLib = require("@flarenetwork/flare-periphery-contract-artifacts");
 import "dotenv/config";
-import { run } from "hardhat";
+import { network, run } from "hardhat";
 import fs  from "fs";
 import { TransactionResponse } from "ethers";
 import hardhat, { ethers } from "hardhat";
@@ -97,7 +97,7 @@ async function executeStateConnectorProof(txs: string[]) {
 
   const responses = await Promise.all(
     txs.map(async tx => {
-      const req = await prepareAttestationRequest("EVMTransaction", "eth", "testETH", {
+      const req = await prepareAttestationRequest("EVMTransaction", "flr", "testFLR", {
         transactionHash: tx,
         requiredConfirmations: "1",
         provideInput: true,
@@ -188,8 +188,7 @@ async function executeStateConnectorProof(txs: string[]) {
 async function main() {
   await executeStateConnectorProof([
     // "0x0613fc75cc5f4e22294dbfe5bb575d7fc714efe0de94beda59b423b0a2225587",
-    // "0x12ed6a48e594fcab55d54c184edbd7c22c19874ecf0be6239044bb44d387f758"
-    "0xb856e15aff227b00c13cc443c9f1fe4d519f3233e863b48c2c542cd2ceebe891"
+    "0x12ed6a48e594fcab55d54c184edbd7c22c19874ecf0be6239044bb44d387f758"
   ]);
 }
 

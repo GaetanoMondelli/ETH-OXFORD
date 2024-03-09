@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   16: {
     ETF: {
-      address: "0x128BF1143e51E18E85e22f7b7017a264c0949EaD",
+      address: "0x73a7d1B252300b2e2e9a1119D1E490C6F9bf9c9B",
       abi: [
         {
           inputs: [
@@ -3027,7 +3027,7 @@ const deployedContracts = {
       },
     },
     ETFLock: {
-      address: "0x2cE00d5a6F739a142C9A3E1E2eea363bC47fF7F2",
+      address: "0xC6FB64471269Ec64151276DEc8c73f89E20e790F",
       abi: [
         {
           inputs: [
@@ -3075,6 +3075,12 @@ const deployedContracts = {
         {
           anonymous: false,
           inputs: [
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "_vaultId",
+              type: "uint256",
+            },
             {
               indexed: false,
               internalType: "address",

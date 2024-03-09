@@ -27,6 +27,7 @@ enum VaultState {
     BURNED
 }
 
+
 contract ETF  {
 	address public flareContractsRegistryLibrary;
     Token[] public requiredTokens;
@@ -43,11 +44,18 @@ contract ETF  {
     address contributor;
     }
 
-struct TransactionInfo {
-    EVMTransaction.Proof originalTransaction;
-    uint256 eventNumber;
-    EventInfo[] eventInfo;
-}
+    struct TransactionInfo {
+        EVMTransaction.Proof originalTransaction;
+        uint256 eventNumber;
+        EventInfo[] eventInfo;
+    }
+
+
+    event Burn(
+        uint256 _vaultId,
+        address _address
+    );
+
 
     constructor(
         // address _flareContractsRegistryLibrary, 
@@ -116,14 +124,19 @@ struct TransactionInfo {
         
         // transfer tokens to the vault
         for (uint256 i = 0; i < _tokens.length; i++) {
-            IERC20(_tokens[i]._address).transferFrom(
-                _tokens[i]._contributor,
-                address(this),
-                _tokens[i]._quantity
-            );
+            if (_tokens[i]._chainId == chainId) {
+                IERC20(_tokens[i]._address).transferFrom(
+                    _tokens[i]._contributor,
+                    address(this),
+                    _tokens[i]._quantity
+                );
+            }
+            // vaults[_vaultId]._tokens.push(_tokens[i]);
             uint256 j = 0;
             for (j=0; j < vaults[_vaultId]._tokens.length; j++) {
-                if (vaults[_vaultId]._tokens[j]._address == _tokens[i]._address) {
+                if (vaults[_vaultId]._tokens[j]._address == _tokens[i]._address
+                    && vaults[_vaultId]._tokens[j]._chainId == _chainId
+                ) {
                     vaults[_vaultId]._tokens[j]._quantity += _tokens[i]._quantity;
                     break;
                 }
@@ -133,6 +146,7 @@ struct TransactionInfo {
             }
         }
         
+        vaults[_vaultId].state = VaultState.OPEN;
 
         if (checkVaultCompletion(_vaultId)) {
             vaults[_vaultId].state = VaultState.MINTED;
@@ -151,19 +165,40 @@ struct TransactionInfo {
         transactions[transactionIndex].originalTransaction = _transaction;
         transactions[transactionIndex].eventNumber = _transaction.data.responseBody.events.length;
         // EventInfo[] storage eventInfo = transactions[transactionIndex].eventInfo;
-        Token[] memory tokens = new Token[](_transaction.data.responseBody.events.length);
+        Token[] memory tokens = new Token[](2);
         uint256 external_chainId;
-        bytes32 eventTopic = keccak256("Deposit(address,uint256,uint256,address)");
+        uint256 vaultId;
+        uint256 index=0;
+        bytes32 eventTopic = keccak256("Deposit(uint256,address,uint256,uint256,address)");
         for(uint256 i = 0; i < _transaction.data.responseBody.events.length; i++) {
             // (address sender, uint256 value, bytes memory data) = abi.decode(_transaction.data.responseBody.events[i].data, (address, uint256, bytes));
             if (_transaction.data.responseBody.events[i].topics[0] != eventTopic) {
                 continue;
             }
-            (address _address, uint256 _quantity, uint256 _chainId, address _contributor) = abi.decode(_transaction.data.responseBody.events[i].data, (address, uint256, uint256, address));
-            tokens[i] = Token(_address, _quantity, _chainId, _contributor);
+            (uint256 _vaultId, address _address, uint256 _quantity, uint256 _chainId, address _contributor) = abi.decode(_transaction.data.responseBody.events[i].data, (uint256, address, uint256, uint256, address));
+            tokens[index] = Token(_address, _quantity, _chainId, _contributor);
+            index++;
             external_chainId = _chainId;
+            vaultId = _vaultId;
         }
-        _deposit(transactionIndex, tokens, external_chainId);
+        _deposit(vaultId, tokens, external_chainId);
+    }
+
+    // burn
+
+    function burn(uint256 _vaultId) public {
+        require(vaults[_vaultId].state == VaultState.MINTED, "Vault is not minted");
+        IETFToken(etfToken).burn(msg.sender, etfTokenPerVault);
+        vaults[_vaultId].state = VaultState.BURNED;
+        for (uint256 i = 0; i < vaults[_vaultId]._tokens.length; i++) {
+            if (vaults[_vaultId]._tokens[i]._chainId == chainId) {
+                IERC20(vaults[_vaultId]._tokens[i]._address).transfer(
+                    msg.sender,
+                    vaults[_vaultId]._tokens[i]._quantity
+                );
+            }
+        }
+        emit Burn(_vaultId, msg.sender);
     }
     
     function isEVMTransactionProofValid(
