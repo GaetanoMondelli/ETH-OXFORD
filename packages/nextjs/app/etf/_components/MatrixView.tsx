@@ -5,12 +5,27 @@ import dynamic from "next/dynamic";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-// async function fetchBundleInfo(bundleId: string) {
-//   //  return a color based on bundleId randomly
-//   const colors = ["#008FFB", "#00E396", "#FEB019", "#FF4560", "#775DD0"];
-//   const color = colors[Math.floor(Math.random() * colors.length)];
-//   return color;
-// }
+function getColor(state: number, selected: bool) {
+  //  return a color based on bundleId randomly
+
+  if (state === 0) {
+    // return dark gray if selected or gray if not
+    return selected ? "#696969" : "#D3D3D3";
+  }
+  if (state === 1) {
+    // dark blue if selected or blue if not
+    return selected ? "#00008B" : "#869cda";
+  }
+  if (state === 2) {
+    // green
+    return selected ? "#00FF00" : "#008000";
+  }
+  if (state === 3) {
+    // red
+    return selected ? "#FF0000" : "#8B0000";
+  }
+  return "#D3D3D3";
+}
 export function MatrixView({
   bundles,
   bundleId,
@@ -33,10 +48,8 @@ export function MatrixView({
     for (let colIndex = 0; colIndex < numberOfColumns; colIndex++) {
       // Invert the row index to start from the bottom
       const cellValue = rowIndex * numberOfColumns + colIndex;
-      let cellColor = "#D3D3D3"; // Assign a random color
-      if (cellValue === Number(bundleId)) {
-        cellColor = "#FF0000";
-      }
+      // let cellColor = "#D3D3D3"; // Assign a random color
+      let cellColor = getColor(bundles[cellValue], bundleId === cellValue);
       rowData.data.push({
         x: `Col ${colIndex + 1}`,
         y: cellValue,

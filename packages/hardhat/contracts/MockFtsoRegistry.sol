@@ -10,10 +10,12 @@ contract MockFtsoRegistry is IFtsoRegistry {
 	string[] public symbols;
 
 	constructor() {
-		symbols.push("C2FLR");
-		symbols.push("testBTC");
-		prices["C2FLR"] = [100000, 1709745120, 5];
-		prices["testBTC"] = [5000000000, 1709745120, 5];
+		symbols.push("PEPE");
+		symbols.push("OVR");
+		symbols.push("UNI");
+		prices["PEPE"] = [100000, 1709745120, 5];
+		prices["OVR"] = [200000, 1709745120, 5];
+		prices["UNI"] = [500000, 1709745120, 5];
 	}
 
 	function getSupportedSymbols()

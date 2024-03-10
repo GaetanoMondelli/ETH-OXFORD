@@ -15,7 +15,9 @@ import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { getParsedError, notification } from "~~/utils/scaffold-eth";
 import { getAllContracts } from "~~/utils/scaffold-eth/contractsData";
 
-const Broker: NextPage = () => {
+// import { DebugContracts } from "./_components/DebugContracts";
+
+const ETF: NextPage = () => {
   const initialCollateralAmount = 1;
 
   const collateralAmount = BigNumber.from(initialCollateralAmount).mul(BigNumber.from(10).pow(18));
@@ -23,6 +25,7 @@ const Broker: NextPage = () => {
 
   const contractsData = getAllContracts();
   const [bundleId, setBundleId] = useState<string>("1");
+  const [bundles, setBundles] = useState<any>();
   const [resultFee, setResultFee] = useState<any>();
   const [resultOV, setResultOV] = useState<any>();
   const [txValue, setTxValue] = useState<string | bigint>("");
@@ -32,10 +35,12 @@ const Broker: NextPage = () => {
   const { targetNetwork } = useTargetNetwork();
   const writeDisabled = !chain || chain?.id !== targetNetwork.id;
 
+  const contractName = "ETF";
+
   const { isFetching, refetch } = useContractRead({
-    address: contractsData["Broker"].address,
-    functionName: "fee",
-    abi: contractsData["Broker"].abi,
+    address: contractsData[contractName].address,
+    functionName: "getVaultStates",
+    abi: contractsData[contractName].abi,
     args: [],
     enabled: false,
     onError: (error: any) => {
@@ -49,9 +54,9 @@ const Broker: NextPage = () => {
     isLoading,
     writeAsync,
   } = useContractWrite({
-    address: contractsData["Broker"].address,
+    address: contractsData[contractName].address,
     functionName: "openVault",
-    abi: contractsData["Broker"].abi,
+    abi: contractsData[contractName].abi,
     args: ["testBTC", collateralAmount.toString(), 1],
   });
 
@@ -76,6 +81,20 @@ const Broker: NextPage = () => {
     setDisplayedTxResult(txResult);
   }, [txResult]);
 
+  useEffect(() => {
+    async function fetchData() {
+      if (isFetching) {
+        return;
+      }
+      if (refetch) {
+        const { data } = await refetch();
+        setBundles(data);
+        console.log(data);
+      }
+    }
+    fetchData();
+  }, []);
+
   return (
     <>
       <div
@@ -89,7 +108,7 @@ const Broker: NextPage = () => {
         className="card"
       >
         <h1 className="text-4xl my-0">Collateral {bundleId}</h1>
-        <MatrixView setBundleId={setBundleId} bundleId={bundleId} bundles={[]} />
+        {bundles && <MatrixView setBundleId={setBundleId} bundleId={bundleId} bundles={bundles} />}
 
         <p>Test call</p>
 
@@ -104,10 +123,10 @@ const Broker: NextPage = () => {
         ) : null}
 
         <br></br>
-        <CollateralVaultView bundleId={bundleId} />
+        {/* <CollateralVaultView bundleId={bundleId} /> */}
       </div>
     </>
   );
 };
 
-export default Broker;
+export default ETF;

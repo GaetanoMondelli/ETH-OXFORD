@@ -1,4 +1,27 @@
+import { defineChain } from "viem";
 import * as chains from "viem/chains";
+
+const flareTestnet = /*#__PURE__*/ defineChain({
+  id: 16,
+  name: "Coston",
+  network: "coston",
+  nativeCurrency: {
+    decimals: 18,
+    name: "costonflare",
+    symbol: "CFLR",
+  },
+  rpcUrls: {
+    default: { http: ["https://coston-api.flare.network/ext/C/rpc"] },
+    public: { http: ["https://coston-api.flare.network/ext/C/rpc"] },
+  },
+  blockExplorers: {
+    default: {
+      name: "Coston2 Explorer",
+      url: "https://coston-explorer.flare.network",
+    },
+  },
+  testnet: true,
+});
 
 export type ScaffoldConfig = {
   targetNetworks: readonly chains.Chain[];
@@ -11,7 +34,7 @@ export type ScaffoldConfig = {
 
 const scaffoldConfig = {
   // The networks on which your DApp is live
-  targetNetworks: [chains.hardhat],
+  targetNetworks: [flareTestnet as chains.Chain],
 
   // The interval at which your front-end polls the RPC servers for new data
   // it has no effect if you only target the local network (default is 4000)

@@ -6,7 +6,7 @@ import "@thirdweb-dev/contracts/extension/Ownable.sol";
 
 interface IETFToken {
 	function mint(address account, uint256 amount) external;
-
+	function symbol() external view returns (string memory);
 	function burn(address account, uint256 amount) external;
 }
 
@@ -37,5 +37,4 @@ contract SimpleERC20 is ERC20, Ownable {
 	function _canSetOwner() internal view virtual override returns (bool) {
 		return msg.sender == owner();
 	}
-
 }

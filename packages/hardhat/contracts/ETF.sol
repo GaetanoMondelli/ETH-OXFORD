@@ -7,6 +7,7 @@ import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {EVMTransaction} from "@flarenetwork/flare-periphery-contracts/coston/stateConnector/interface/EVMTransaction.sol";
 import {FlareContractsRegistryLibrary} from "@flarenetwork/flare-periphery-contracts/coston/util-contracts/ContractRegistryLibrary.sol";
+import {IFtsoRegistry} from "@flarenetwork/flare-periphery-contracts/flare/ftso/userInterfaces/IFtsoRegistry.sol";
 
 struct Token {
     address _address;
@@ -29,13 +30,17 @@ enum VaultState {
 
 
 contract ETF  {
-	address public flareContractsRegistryLibrary;
+	address public ftsoRegistry;
     Token[] public requiredTokens;
     uint256 public chainId;
     address public etfToken;
     uint256 public  etfTokenPerVault;
 
     mapping(uint256 => Vault) public vaults;
+
+    mapping(uint256 => address[]) public contributionsAddress;
+    mapping(uint256 => uint256[]) public contributionsAmount;
+    mapping(address => string) public symbols;
     
     struct EventInfo {
     address sender;
@@ -58,18 +63,23 @@ contract ETF  {
 
 
     constructor(
-        // address _flareContractsRegistryLibrary, 
+        address _ftsoRegistry,
+        // array of symbols
+        string[] memory _symbols,
         uint256 _chainId,
-        address _etfToken, uint256 _etfTokenPerVault,
+        address _etfToken, 
+        uint256 _etfTokenPerVault,
         Token[] memory _requiredTokens
         ) 
     {
         // flareContractsRegistryLibrary = _flareContractsRegistryLibrary; // this one should check flare transactions
-        chainId = _chainId;
+       ftsoRegistry = _ftsoRegistry;
+       chainId = _chainId;
         etfToken = _etfToken;
         etfTokenPerVault = _etfTokenPerVault;
         for (uint256 i = 0; i < _requiredTokens.length; i++) {
             requiredTokens.push(_requiredTokens[i]);
+            symbols[_requiredTokens[i]._address] = _symbols[i];
         }
     }
 
@@ -138,11 +148,23 @@ contract ETF  {
                     && vaults[_vaultId]._tokens[j]._chainId == _chainId
                 ) {
                     vaults[_vaultId]._tokens[j]._quantity += _tokens[i]._quantity;
+
+                    // get the price of the token
+                    (uint256 currentSyntheticPrice, , ) = IFtsoRegistry(ftsoRegistry).getCurrentPriceWithDecimals(
+                        symbols[_tokens[i]._address]
+                    );
+                    contributionsAmount[_vaultId].push(currentSyntheticPrice * _tokens[i]._quantity);
+                    contributionsAddress[_vaultId].push(_tokens[i]._contributor);
                     break;
                 }
             }
             if (j == vaults[_vaultId]._tokens.length) {
-                vaults[_vaultId]._tokens.push(_tokens[i]);
+                (uint256 currentSyntheticPrice, , ) = IFtsoRegistry(ftsoRegistry).getCurrentPriceWithDecimals(
+                        symbols[_tokens[i]._address]
+                    );
+                    contributionsAmount[_vaultId].push(currentSyntheticPrice * _tokens[i]._quantity);
+                    contributionsAddress[_vaultId].push(_tokens[i]._contributor);
+                    vaults[_vaultId]._tokens.push(_tokens[i]);
             }
         }
         
@@ -151,8 +173,19 @@ contract ETF  {
         if (checkVaultCompletion(_vaultId)) {
             vaults[_vaultId].state = VaultState.MINTED;
             // easy scenario one owner per vault
-            IETFToken(etfToken).mint(msg.sender, 
-                etfTokenPerVault);
+
+            // calculate the contribution
+            uint256 contributionslength = contributionsAddress[_vaultId].length;
+            uint256 totalContribution = 0;
+
+            for (uint256 i = 0; i < contributionslength; i++) {
+                totalContribution += contributionsAmount[_vaultId][i];
+            }
+
+            for (uint256 i = 0; i < contributionslength; i++) {
+                IETFToken(etfToken).mint(msg.sender, 
+                    etfTokenPerVault * contributionsAmount[_vaultId][i] / totalContribution);
+            }
         }
     }
 
@@ -186,7 +219,7 @@ contract ETF  {
 
 
     function burn(uint256 _vaultId) public {
-        require(vaults[_vaultId].state == VaultState.MINTED, "Vault was not minted!");
+        require(vaults[_vaultId].state == VaultState.MINTED, "Vault was not minted");
         vaults[_vaultId].state = VaultState.BURNED;
         for (uint256 i = 0; i < vaults[_vaultId]._tokens.length; i++) {
             if (vaults[_vaultId]._tokens[i]._chainId == chainId) {

@@ -7,10 +7,20 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   16: {
     ETF: {
-      address: "0x68481b0A35C4919B6E5cDa526847e90Dbe931201",
+      address: "0x85325798FF4E6bd40B1766AEa13bFe1e3e586D75",
       abi: [
         {
           inputs: [
+            {
+              internalType: "address",
+              name: "_ftsoRegistry",
+              type: "address",
+            },
+            {
+              internalType: "string[]",
+              name: "_symbols",
+              type: "string[]",
+            },
             {
               internalType: "uint256",
               name: "_chainId",
@@ -283,6 +293,54 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "contributionsAddress",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "contributionsAmount",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
               name: "_vaultId",
               type: "uint256",
             },
@@ -347,7 +405,7 @@ const deployedContracts = {
         },
         {
           inputs: [],
-          name: "flareContractsRegistryLibrary",
+          name: "ftsoRegistry",
           outputs: [
             {
               internalType: "address",
@@ -618,6 +676,25 @@ const deployedContracts = {
         {
           inputs: [
             {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          name: "symbols",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
               internalType: "uint256",
               name: "",
               type: "uint256",
@@ -806,8 +883,538 @@ const deployedContracts = {
       ],
       inheritedFunctions: {},
     },
+    MockFtsoRegistry: {
+      address: "0xb973c1ff930f796Afe8fe25e50FFF59e986517Fa",
+      abi: [
+        {
+          inputs: [],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          inputs: [],
+          name: "getAllCurrentPrices",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "ftsoIndex",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "price",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "decimals",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "timestamp",
+                  type: "uint256",
+                },
+              ],
+              internalType: "struct IFtsoRegistry.PriceInfo[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_symbol",
+              type: "string",
+            },
+          ],
+          name: "getCurrentPrice",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "_price",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "_timestamp",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_ftsoIndex",
+              type: "uint256",
+            },
+          ],
+          name: "getCurrentPrice",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "_price",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "_timestamp",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_assetIndex",
+              type: "uint256",
+            },
+          ],
+          name: "getCurrentPriceWithDecimals",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "_price",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "_timestamp",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "_assetPriceUsdDecimals",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_symbol",
+              type: "string",
+            },
+          ],
+          name: "getCurrentPriceWithDecimals",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "_price",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "_timestamp",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "_decimals",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256[]",
+              name: "_indices",
+              type: "uint256[]",
+            },
+          ],
+          name: "getCurrentPricesByIndices",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "ftsoIndex",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "price",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "decimals",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "timestamp",
+                  type: "uint256",
+                },
+              ],
+              internalType: "struct IFtsoRegistry.PriceInfo[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string[]",
+              name: "_symbols",
+              type: "string[]",
+            },
+          ],
+          name: "getCurrentPricesBySymbols",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "ftsoIndex",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "price",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "decimals",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "timestamp",
+                  type: "uint256",
+                },
+              ],
+              internalType: "struct IFtsoRegistry.PriceInfo[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_ftsoIndex",
+              type: "uint256",
+            },
+          ],
+          name: "getFtso",
+          outputs: [
+            {
+              internalType: "contract IIFtso",
+              name: "_activeFtsoAddress",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_symbol",
+              type: "string",
+            },
+          ],
+          name: "getFtsoBySymbol",
+          outputs: [
+            {
+              internalType: "contract IIFtso",
+              name: "_activeFtsoAddress",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_symbol",
+              type: "string",
+            },
+          ],
+          name: "getFtsoIndex",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "_assetIndex",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_ftsoIndex",
+              type: "uint256",
+            },
+          ],
+          name: "getFtsoSymbol",
+          outputs: [
+            {
+              internalType: "string",
+              name: "_symbol",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256[]",
+              name: "_indices",
+              type: "uint256[]",
+            },
+          ],
+          name: "getFtsos",
+          outputs: [
+            {
+              internalType: "contract IFtsoGenesis[]",
+              name: "_ftsos",
+              type: "address[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getSupportedFtsos",
+          outputs: [
+            {
+              internalType: "contract IIFtso[]",
+              name: "_ftsos",
+              type: "address[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getSupportedIndices",
+          outputs: [
+            {
+              internalType: "uint256[]",
+              name: "_supportedIndices",
+              type: "uint256[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getSupportedIndicesAndFtsos",
+          outputs: [
+            {
+              internalType: "uint256[]",
+              name: "_supportedIndices",
+              type: "uint256[]",
+            },
+            {
+              internalType: "contract IIFtso[]",
+              name: "_ftsos",
+              type: "address[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getSupportedIndicesAndSymbols",
+          outputs: [
+            {
+              internalType: "uint256[]",
+              name: "_supportedIndices",
+              type: "uint256[]",
+            },
+            {
+              internalType: "string[]",
+              name: "_supportedSymbols",
+              type: "string[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getSupportedIndicesSymbolsAndFtsos",
+          outputs: [
+            {
+              internalType: "uint256[]",
+              name: "_supportedIndices",
+              type: "uint256[]",
+            },
+            {
+              internalType: "string[]",
+              name: "_supportedSymbols",
+              type: "string[]",
+            },
+            {
+              internalType: "contract IIFtso[]",
+              name: "_ftsos",
+              type: "address[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getSupportedSymbols",
+          outputs: [
+            {
+              internalType: "string[]",
+              name: "",
+              type: "string[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getSupportedSymbolsAndFtsos",
+          outputs: [
+            {
+              internalType: "string[]",
+              name: "_supportedSymbols",
+              type: "string[]",
+            },
+            {
+              internalType: "contract IIFtso[]",
+              name: "_ftsos",
+              type: "address[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "symbol",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "price",
+              type: "uint256",
+            },
+          ],
+          name: "setPrice",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string[]",
+              name: "_symbols",
+              type: "string[]",
+            },
+          ],
+          name: "setSupportedSymbols",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "symbols",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {
+        getAllCurrentPrices:
+          "@flarenetwork/flare-periphery-contracts/flare/ftso/userInterfaces/IFtsoRegistry.sol",
+        getCurrentPrice:
+          "@flarenetwork/flare-periphery-contracts/flare/ftso/userInterfaces/IFtsoRegistry.sol",
+        getCurrentPriceWithDecimals:
+          "@flarenetwork/flare-periphery-contracts/flare/ftso/userInterfaces/IFtsoRegistry.sol",
+        getCurrentPricesByIndices:
+          "@flarenetwork/flare-periphery-contracts/flare/ftso/userInterfaces/IFtsoRegistry.sol",
+        getCurrentPricesBySymbols:
+          "@flarenetwork/flare-periphery-contracts/flare/ftso/userInterfaces/IFtsoRegistry.sol",
+        getFtso:
+          "@flarenetwork/flare-periphery-contracts/flare/ftso/userInterfaces/IFtsoRegistry.sol",
+        getFtsoBySymbol:
+          "@flarenetwork/flare-periphery-contracts/flare/ftso/userInterfaces/IFtsoRegistry.sol",
+        getFtsoIndex:
+          "@flarenetwork/flare-periphery-contracts/flare/ftso/userInterfaces/IFtsoRegistry.sol",
+        getFtsoSymbol:
+          "@flarenetwork/flare-periphery-contracts/flare/ftso/userInterfaces/IFtsoRegistry.sol",
+        getFtsos:
+          "@flarenetwork/flare-periphery-contracts/flare/ftso/userInterfaces/IFtsoRegistry.sol",
+        getSupportedFtsos:
+          "@flarenetwork/flare-periphery-contracts/flare/ftso/userInterfaces/IFtsoRegistry.sol",
+        getSupportedIndices:
+          "@flarenetwork/flare-periphery-contracts/flare/ftso/userInterfaces/IFtsoRegistry.sol",
+        getSupportedIndicesAndFtsos:
+          "@flarenetwork/flare-periphery-contracts/flare/ftso/userInterfaces/IFtsoRegistry.sol",
+        getSupportedIndicesAndSymbols:
+          "@flarenetwork/flare-periphery-contracts/flare/ftso/userInterfaces/IFtsoRegistry.sol",
+        getSupportedIndicesSymbolsAndFtsos:
+          "@flarenetwork/flare-periphery-contracts/flare/ftso/userInterfaces/IFtsoRegistry.sol",
+        getSupportedSymbols:
+          "@flarenetwork/flare-periphery-contracts/flare/ftso/userInterfaces/IFtsoRegistry.sol",
+        getSupportedSymbolsAndFtsos:
+          "@flarenetwork/flare-periphery-contracts/flare/ftso/userInterfaces/IFtsoRegistry.sol",
+      },
+    },
     SimpleERC20: {
-      address: "0x4B2189193b827be3F42c4Dd9BB00e78EfFF7B745",
+      address: "0x468B16cCaca97DE626Dd741BA14b3C458F0Cb46F",
       abi: [
         {
           inputs: [

@@ -31,6 +31,16 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
     // const etfAddress = "0x5fb202C83294787B6A36Dfb53D643eD27128d69f";
     // const etf = await hre.ethers.getContractAt("ETF", etfAddress);
 
+    await deploy("MockFtsoRegistry", {
+      from: deployer,
+      args: [],
+      log: true,
+      autoMine: true,
+    });
+
+    const ftsoRegistry = await hre.ethers.getContract<Contract>("MockFtsoRegistry", deployer);
+    const ftsoRegistryAddress = await ftsoRegistry.getAddress();
+
     await deploy("SimpleERC20", {
       from: deployer,
       args: ["ETFToken", "ETF"],
@@ -41,16 +51,19 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
     const etfToken = await hre.ethers.getContract<Contract>("SimpleERC20", deployer);
     const etfTokenAddress = await etfToken.getAddress();
 
-    await deploy("SimpleERC20", {
-      from: deployer,
-      args: ["PEPE TOKEN", "PEPE"],
-      log: true,
-      autoMine: true,
-    });
+    // await deploy("SimpleERC20", {
+    //   from: deployer,
+    //   args: ["PEPE TOKEN", "PEPE"],
+    //   log: true,
+    //   autoMine: true,
+    // });
 
-    const pepeToken = await hre.ethers.getContract<Contract>("SimpleERC20", deployer);
+    // const pepeToken = await hre.ethers.getContract<Contract>("SimpleERC20", deployer);
+
+    const pepeToken = await hre.ethers.getContractAt("SimpleERC20", "0x95F2C24d6b0d7D17fBF5dE14d4791504A240Ed6d");
     const pepeTokenAddress = await pepeToken.getAddress();
     await pepeToken.mint(deployer, BigNumber.from(1000).mul(BigNumber.from(10).pow(18)).toString());
+    // await pepeToken.approve(etfTokenAddress, BigNumber.from(1000).mul(BigNumber.from(10).pow(18)).toString());
 
     try {
       await hre.run("verify:verify", {
@@ -58,10 +71,10 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
         constructorArguments: ["ETFToken", "ETF"],
       });
 
-      await hre.run("verify:verify", {
-        address: pepeTokenAddress,
-        constructorArguments: ["PEPE TOKEN, PEPE"],
-      });
+      // await hre.run("verify:verify", {
+      //   address: pepeTokenAddress,
+      //   constructorArguments: ["PEPE TOKEN, PEPE"],
+      // });
     } catch (e) {
       console.log("Error verifying the contract");
       console.log(e);
@@ -72,9 +85,11 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
       log: true,
       autoMine: true,
       args: [
+        ftsoRegistryAddress,
+        ["OVR", "UNI", "PEPE"],
         costonChainId,
         etfTokenAddress,
-        100,
+        BigNumber.from(100).mul(BigNumber.from(10).pow(18)).toString(),
         [
           {
             _address: overChainAddress,
@@ -108,15 +123,6 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
     console.log("ChainId: ", chainId.toString());
     await pepeToken.approve(etfAddress, BigNumber.from(1000).mul(BigNumber.from(10).pow(18)).toString());
     await etf.checkExternalDeposit(proof);
-    await etf.deposit(0, [
-      {
-        _address: pepeTokenAddress,
-        _quantity: BigNumber.from(100).mul(BigNumber.from(10).pow(18)).toString(),
-        _chainId: costonChainId.toString(),
-        _contributor: deployer,
-      },
-    ]);
-
     await etf.deposit(3, [
       {
         _address: pepeTokenAddress,
@@ -126,17 +132,28 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
       },
     ]);
 
+    await etf.deposit(0, [
+      {
+        _address: pepeTokenAddress,
+        _quantity: BigNumber.from(100).mul(BigNumber.from(10).pow(18)).toString(),
+        _chainId: costonChainId.toString(),
+        _contributor: deployer,
+      },
+    ]);
+
     // approve etf tokens to reedem the tokens
-    await etfToken.approve(etfAddress, 10000000);
-    await etf.burn(0);
+    await etfToken.approve(etfAddress, BigNumber.from(100).mul(BigNumber.from(10).pow(18)).toString());
+    // await etf.burn(0);
 
     try {
       await hre.run("verify:verify", {
         address: etfAddress,
         constructorArguments: [
+          ftsoRegistryAddress,
+          ["OVR", "UNI", "PEPE"],
           costonChainId,
           etfTokenAddress,
-          100,
+          BigNumber.from(100).mul(BigNumber.from(10).pow(18)).toString(),
           [
             {
               _address: overChainAddress,
