@@ -103,14 +103,17 @@ const ETF: NextPage = () => {
           padding: "20px",
           borderRadius: "10px",
           color: "black",
-          width: "800px",
+          // centering the card
+          margin: "auto",
+          width: "1000px",
         }}
         className="card"
       >
-        <h1 className="text-4xl my-0">Collateral {bundleId}</h1>
+        <h1 className="text-4xl my-0">ETF {bundleId}</h1>
+        <p>{displayTxResult(contractsData[contractName].address)}</p>
         {bundles && <MatrixView setBundleId={setBundleId} bundleId={bundleId} bundles={bundles} />}
 
-        <p>Test call</p>
+        <p>Call</p>
 
         <button className="btn btn-secondary btn-sm" disabled={writeDisabled || isLoading} onClick={handleWrite}>
           {isLoading && <span className="loading loading-spinner loading-xs"></span>}
@@ -123,7 +126,7 @@ const ETF: NextPage = () => {
         ) : null}
 
         <br></br>
-        {/* <CollateralVaultView bundleId={bundleId} /> */}
+        <CollateralVaultView bundleId={bundleId} />
       </div>
     </>
   );

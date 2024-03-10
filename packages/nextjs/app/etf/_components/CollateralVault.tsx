@@ -11,9 +11,9 @@ export function CollateralVaultView({ bundleId }: { bundleId: string }) {
   const [data, setData] = useState<any>();
 
   const { isFetching, refetch } = useContractRead({
-    address: contractsData["Broker"].address,
-    functionName: "getVaultOverview",
-    abi: contractsData["Broker"].abi,
+    address: contractsData["ETF"].address,
+    functionName: "getVault",
+    abi: contractsData["ETF"].abi,
     args: [bundleId],
     enabled: false,
     onError: (error: any) => {
@@ -29,6 +29,7 @@ export function CollateralVaultView({ bundleId }: { bundleId: string }) {
       }
       if (refetch) {
         const { data } = await refetch();
+        console.log(data);
         setData(data);
       }
     }
@@ -53,17 +54,24 @@ export function CollateralVaultView({ bundleId }: { bundleId: string }) {
       {data !== null && data !== undefined && (
         <>
           {/* <p>{displayTxResult(data)}</p> */}
-          <p>Owner</p>
-          <p>{displayTxResult(data[0])}</p>
-          <p>Collateral (FLR)</p>
-          <p>{displayTxResult(data[1])}</p>
-          <p>Synthtic (testBTC)</p>
-          <p>{Number(displayTxResult(data[2]))/1000000000000000000}</p>
-          <p>Mint Prize</p>
-          <p>{Number(displayTxResult(data[3]))/100000} $</p>
-          <p>Collateral Ratio</p>
-          <p>{displayTxResult(data[4])}</p>
+          <b>TOKEN IN THE VAULT</b>
+          {data[0].map((item: any, index: number) => {
+            return (
+              <div className="card" key={index}
+                style={{
+                  padding: "1%"
+                }}>
+              
 
+                <b>Address</b>
+                <p>{displayTxResult(data[0][index]._address)}</p>
+                <p>Chain Id</p>
+                <p>{displayTxResult(data[0][index]._chainId)}</p>
+                <p>Amount</p>
+                <p>{displayTxResult(data[0][index]._quantity)}</p>
+              </div>
+            );
+          })}
         </>
       )}
       <br></br>
