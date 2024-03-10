@@ -3666,7 +3666,7 @@ const deployedContracts = {
       },
     },
     ETFLock: {
-      address: "0x0283c3AC3237E3Ce1f30d3E1B6E3c07BBeBed262",
+      address: "0x63157F59FCB93bC0c1CD314C70E2d85f75cBB2a4",
       abi: [
         {
           inputs: [
@@ -3747,6 +3747,19 @@ const deployedContracts = {
           ],
           name: "Deposit",
           type: "event",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_vaultId",
+              type: "uint256",
+            },
+          ],
+          name: "burn",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
         },
         {
           inputs: [],

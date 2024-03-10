@@ -162,8 +162,7 @@ export function MatrixView({
   const legendItems = [
     { color: "gray", label: "Empty" },
     { color: "lightblue", label: "Open" },
-    { color: "orange", label: "Messages to Process" },
-    { color: "green", label: "Locked" },
+    { color: "green", label: "Minted" },
     { color: "red", label: "Burned" },
   ];
 

@@ -28,6 +28,17 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   const { deploy } = hre.deployments;
 
   if (hre.network.name === "coston") {
+    console.log("Publishing Sepolia Transaction");
+    const etfAddress = "0x85325798FF4E6bd40B1766AEa13bFe1e3e586D75";
+    const etf = await hre.ethers.getContractAt("ETF", etfAddress);
+    const data = fs.readFileSync("/Users/gaetano/dev/flare_training/packages/hardhat/evmproof2.json");
+    const proof = JSON.parse(data.toString());
+    console.log("Publishing Proof from sepolia to coston's ETF contract", etfAddress);
+    console.log(proof);
+    await etf.checkExternalDeposit(proof);
+  }
+
+  if (hre.network.name === "coston" && false) {
     // const etfAddress = "0x5fb202C83294787B6A36Dfb53D643eD27128d69f";
     // const etf = await hre.ethers.getContractAt("ETF", etfAddress);
 
@@ -335,9 +346,9 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
     const uniSwapAddress = "0x60a0F6a9952061A78E903B98e5452A996FD4233c";
     const evmVerifierOfFlareTransaction = "0x0bd4a6D3eFbB0aa8b191AE71E7dfF41c10fe8B9F";
     const sepoliaChainId = BigNumber.from(31337);
-    const amount = BigNumber.from(10000).mul(BigNumber.from(10).pow(18));
+    const amount = BigNumber.from(100).mul(BigNumber.from(10).pow(18));
+    const vaultId = BigNumber.from(34);
 
-    console.log("Deploying ETF Lock contract");
     await deploy("ETFLock", {
       from: deployer,
       args: [
@@ -362,10 +373,14 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
       autoMine: true,
     });
 
-    const loclOverChain = await hre.ethers.getContract<Contract>("ETFLock", deployer);
+    // const loclOverChain = await hre.ethers.getContract<Contract>("ETFLock", deployer);
     // lock the required amount of tokens
-    const vaultId = BigNumber.from(0);
-    console.log("Locking the required amount of tokens");
+    // const vaultId = BigNumber.from(34);
+    // const loclOverChainAddress = "0x2cE00d5a6F739a142C9A3E1E2eea363bC47fF7F2";
+    // const loclOverChain = await hre.ethers.getContractAt("ETFLock", loclOverChainAddress);
+    const loclOverChain = await hre.ethers.getContract<Contract>("ETFLock", deployer);
+    console.log("Locking the required amount of tokens on vault", vaultId.toString());
+
 
     const overChain = await hre.ethers.getContractAt("SimpleERC20", overChainAddress);
     const uniSwap = await hre.ethers.getContractAt("SimpleERC20", uniSwapAddress);
@@ -376,43 +391,45 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
     await overChain.approve(await loclOverChain.getAddress(), amount.toString());
     await uniSwap.approve(await loclOverChain.getAddress(), amount.toString());
 
-    await loclOverChain.depositLock(vaultId.toString(), [
+    const tx = await loclOverChain.depositLock(25, [
       {
         _address: overChainAddress,
-        _quantity: BigNumber.from(amount).toString(),
+        _quantity: BigNumber.from(amount).div(2).toString(),
         _chainId: sepoliaChainId.toString(),
         _contributor: deployer,
       },
       {
         _address: uniSwapAddress,
-        _quantity: BigNumber.from(amount).div(2).toString(),
+        _quantity: BigNumber.from(amount).div(1).toString(),
         _chainId: sepoliaChainId.toString(),
         _contributor: deployer,
       },
     ]);
 
+    console.log("Transaction hash: ", tx.hash);
+
     // verify the lock
-    await hre.run("verify:verify", {
-      address: await loclOverChain.getAddress(),
-      constructorArguments: [
-        evmVerifierOfFlareTransaction,
-        sepoliaChainId,
-        [
-          {
-            _address: overChainAddress,
-            _quantity: BigNumber.from(50).toString(),
-            _chainId: sepoliaChainId.toString(),
-            _contributor: deployer,
-          },
-          {
-            _address: uniSwapAddress,
-            _quantity: BigNumber.from(100).toString(),
-            _chainId: sepoliaChainId.toString(),
-            _contributor: deployer,
-          },
-        ],
-      ],
-    });
+    // await hre.run("verify:verify", {
+    //   address: await loclOverChain.getAddress(),
+    //   constructorArguments: [
+    //     evmVerifierOfFlareTransaction,
+    //     sepoliaChainId,
+    //     [
+    //       {
+    //         _address: overChainAddress,
+    //         _quantity: BigNumber.from(50).toString(),
+    //         _chainId: sepoliaChainId.toString(),
+    //         _contributor: deployer,
+    //       },
+    //       {
+    //         _address: uniSwapAddress,
+    //         _quantity: BigNumber.from(100).toString(),
+    //         _chainId: sepoliaChainId.toString(),
+    //         _contributor: deployer,
+    //       },
+    //     ],
+    //   ],
+    // });
 
     return;
   }

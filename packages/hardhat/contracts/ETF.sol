@@ -35,6 +35,7 @@ contract ETF  {
     uint256 public chainId;
     address public etfToken;
     uint256 public  etfTokenPerVault;
+    bool no_constraints = false;
 
     mapping(uint256 => Vault) public vaults;
 
@@ -124,13 +125,19 @@ contract ETF  {
     }
 
     function deposit(uint256 _vaultId, Token[] memory _tokens) public {
+        if(no_constraints){
+             _deposit(_vaultId, _tokens, chainId);
+        }
         _deposit(_vaultId, _tokens, chainId);
     }
+
+    
 
     function _deposit(uint256 _vaultId, Token[] memory _tokens, uint256 _chainId) private {
         // require(vaults[_vaultId].state == VaultState.OPEN || vaults[_vaultId].state == VaultState.EMPTY,
         //     "Vault is not open or empty"
         // );
+ 
         
         // transfer tokens to the vault
         for (uint256 i = 0; i < _tokens.length; i++) {
@@ -172,7 +179,6 @@ contract ETF  {
 
         if (checkVaultCompletion(_vaultId)) {
             vaults[_vaultId].state = VaultState.MINTED;
-            // easy scenario one owner per vault
 
             // calculate the contribution
             uint256 contributionslength = contributionsAddress[_vaultId].length;
@@ -197,14 +203,12 @@ contract ETF  {
         transactions.push();
         transactions[transactionIndex].originalTransaction = _transaction;
         transactions[transactionIndex].eventNumber = _transaction.data.responseBody.events.length;
-        // EventInfo[] storage eventInfo = transactions[transactionIndex].eventInfo;
         Token[] memory tokens = new Token[](2);
         uint256 external_chainId;
         uint256 vaultId;
         uint256 index=0;
         bytes32 eventTopic = keccak256("Deposit(uint256,address,uint256,uint256,address)");
         for(uint256 i = 0; i < _transaction.data.responseBody.events.length; i++) {
-            // (address sender, uint256 value, bytes memory data) = abi.decode(_transaction.data.responseBody.events[i].data, (address, uint256, bytes));
             if (_transaction.data.responseBody.events[i].topics[0] != eventTopic) {
                 continue;
             }

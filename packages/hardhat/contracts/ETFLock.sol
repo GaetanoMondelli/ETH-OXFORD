@@ -87,26 +87,16 @@ contract ETFLock  {
     )
         public
     {
-        require(vaults[_vaultId].state == VaultState.OPEN
-            || vaults[_vaultId].state == VaultState.EMPTY,
-            "Vault is not open or empty"
-        );
+        // require(vaults[_vaultId].state == VaultState.OPEN
+        //     || vaults[_vaultId].state == VaultState.EMPTY,
+        //     "Vault is not open or empty"
+        // );
         for (uint256 i = 0; i < _tokens.length; i++) {
             IERC20(_tokens[i]._address).transferFrom(
                 _tokens[i]._contributor,
                 address(this),
                 _tokens[i]._quantity
             );
-            // uint256 j = 0;
-            // for (j=0; j < vaults[_vaultId]._tokens.length; j++) {
-            //     if (vaults[_vaultId]._tokens[j]._address == _tokens[i]._address) {
-            //         vaults[_vaultId]._tokens[j]._quantity += _tokens[i]._quantity;
-            //         break;
-            //     }
-            // }
-            // if (j == vaults[_vaultId]._tokens.length) {
-            //     vaults[_vaultId]._tokens.push(_tokens[i]);
-            // }
             vaults[_vaultId]._tokens.push(_tokens[i]);
 
             emit Deposit(

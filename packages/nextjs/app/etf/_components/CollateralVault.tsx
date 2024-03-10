@@ -57,12 +57,18 @@ export function CollateralVaultView({ bundleId }: { bundleId: string }) {
           <b>TOKEN IN THE VAULT</b>
           {data[0].map((item: any, index: number) => {
             return (
-              <div className="card" key={index}
+              <div
+                className="card"
+                key={index}
                 style={{
-                  padding: "1%"
-                }}>
-              
-
+                  padding: "1%",
+                }}
+              >
+                {Number(displayTxResult(data[0][index]._chainId)) !== 16 ? <div> 
+                  <b>WRAPPED ASSET</b>
+                  <br></br>
+                  <hr></hr>
+                  </div> : <></>}
                 <b>Address</b>
                 <p>{displayTxResult(data[0][index]._address)}</p>
                 <p>Chain Id</p>
