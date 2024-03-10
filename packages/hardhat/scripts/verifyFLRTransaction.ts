@@ -47,7 +47,7 @@ function toHex(data: string): string {
   return "0x" + result.padEnd(64, "0");
 }
 async function requestMerkleProof(scRound: number, txID: string) {
-  const attestationRequest = await prepareAttestationRequest("EVMTransaction", "flr", "testFLR", {
+  const attestationRequest = await prepareAttestationRequest("EVMTransaction", "sgb", "testFLR", {
     transactionHash: txID,
     requiredConfirmations: "1",
     provideInput: true,
