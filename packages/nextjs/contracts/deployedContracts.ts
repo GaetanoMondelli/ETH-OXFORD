@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   16: {
     ETF: {
-      address: "0x73a7d1B252300b2e2e9a1119D1E490C6F9bf9c9B",
+      address: "0x68481b0A35C4919B6E5cDa526847e90Dbe931201",
       abi: [
         {
           inputs: [
@@ -56,6 +56,38 @@ const deployedContracts = {
           ],
           stateMutability: "nonpayable",
           type: "constructor",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "_vaultId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "_address",
+              type: "address",
+            },
+          ],
+          name: "Burn",
+          type: "event",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_vaultId",
+              type: "uint256",
+            },
+          ],
+          name: "burn",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
         },
         {
           inputs: [],
@@ -775,7 +807,7 @@ const deployedContracts = {
       inheritedFunctions: {},
     },
     SimpleERC20: {
-      address: "0x379f55d1c88C41Cb449dC8Cb664fE5a4490e9049",
+      address: "0x4B2189193b827be3F42c4Dd9BB00e78EfFF7B745",
       abi: [
         {
           inputs: [
@@ -3027,7 +3059,7 @@ const deployedContracts = {
       },
     },
     ETFLock: {
-      address: "0xC6FB64471269Ec64151276DEc8c73f89E20e790F",
+      address: "0x0283c3AC3237E3Ce1f30d3E1B6E3c07BBeBed262",
       abi: [
         {
           inputs: [
@@ -3125,6 +3157,164 @@ const deployedContracts = {
         {
           inputs: [
             {
+              components: [
+                {
+                  internalType: "bytes32[]",
+                  name: "merkleProof",
+                  type: "bytes32[]",
+                },
+                {
+                  components: [
+                    {
+                      internalType: "bytes32",
+                      name: "attestationType",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "sourceId",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "votingRound",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "lowestUsedTimestamp",
+                      type: "uint64",
+                    },
+                    {
+                      components: [
+                        {
+                          internalType: "bytes32",
+                          name: "transactionHash",
+                          type: "bytes32",
+                        },
+                        {
+                          internalType: "uint16",
+                          name: "requiredConfirmations",
+                          type: "uint16",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "provideInput",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "listEvents",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "uint32[]",
+                          name: "logIndices",
+                          type: "uint32[]",
+                        },
+                      ],
+                      internalType: "struct EVMTransaction.RequestBody",
+                      name: "requestBody",
+                      type: "tuple",
+                    },
+                    {
+                      components: [
+                        {
+                          internalType: "uint64",
+                          name: "blockNumber",
+                          type: "uint64",
+                        },
+                        {
+                          internalType: "uint64",
+                          name: "timestamp",
+                          type: "uint64",
+                        },
+                        {
+                          internalType: "address",
+                          name: "sourceAddress",
+                          type: "address",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "isDeployment",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "address",
+                          name: "receivingAddress",
+                          type: "address",
+                        },
+                        {
+                          internalType: "uint256",
+                          name: "value",
+                          type: "uint256",
+                        },
+                        {
+                          internalType: "bytes",
+                          name: "input",
+                          type: "bytes",
+                        },
+                        {
+                          internalType: "uint8",
+                          name: "status",
+                          type: "uint8",
+                        },
+                        {
+                          components: [
+                            {
+                              internalType: "uint32",
+                              name: "logIndex",
+                              type: "uint32",
+                            },
+                            {
+                              internalType: "address",
+                              name: "emitterAddress",
+                              type: "address",
+                            },
+                            {
+                              internalType: "bytes32[]",
+                              name: "topics",
+                              type: "bytes32[]",
+                            },
+                            {
+                              internalType: "bytes",
+                              name: "data",
+                              type: "bytes",
+                            },
+                            {
+                              internalType: "bool",
+                              name: "removed",
+                              type: "bool",
+                            },
+                          ],
+                          internalType: "struct EVMTransaction.Event[]",
+                          name: "events",
+                          type: "tuple[]",
+                        },
+                      ],
+                      internalType: "struct EVMTransaction.ResponseBody",
+                      name: "responseBody",
+                      type: "tuple",
+                    },
+                  ],
+                  internalType: "struct EVMTransaction.Response",
+                  name: "data",
+                  type: "tuple",
+                },
+              ],
+              internalType: "struct EVMTransaction.Proof",
+              name: "_transaction",
+              type: "tuple",
+            },
+          ],
+          name: "checkBurn",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
               internalType: "uint256",
               name: "_vaultId",
               type: "uint256",
@@ -3183,6 +3373,339 @@ const deployedContracts = {
               internalType: "enum VaultState[]",
               name: "",
               type: "uint8[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              components: [
+                {
+                  internalType: "bytes32[]",
+                  name: "merkleProof",
+                  type: "bytes32[]",
+                },
+                {
+                  components: [
+                    {
+                      internalType: "bytes32",
+                      name: "attestationType",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "sourceId",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "votingRound",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "lowestUsedTimestamp",
+                      type: "uint64",
+                    },
+                    {
+                      components: [
+                        {
+                          internalType: "bytes32",
+                          name: "transactionHash",
+                          type: "bytes32",
+                        },
+                        {
+                          internalType: "uint16",
+                          name: "requiredConfirmations",
+                          type: "uint16",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "provideInput",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "listEvents",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "uint32[]",
+                          name: "logIndices",
+                          type: "uint32[]",
+                        },
+                      ],
+                      internalType: "struct EVMTransaction.RequestBody",
+                      name: "requestBody",
+                      type: "tuple",
+                    },
+                    {
+                      components: [
+                        {
+                          internalType: "uint64",
+                          name: "blockNumber",
+                          type: "uint64",
+                        },
+                        {
+                          internalType: "uint64",
+                          name: "timestamp",
+                          type: "uint64",
+                        },
+                        {
+                          internalType: "address",
+                          name: "sourceAddress",
+                          type: "address",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "isDeployment",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "address",
+                          name: "receivingAddress",
+                          type: "address",
+                        },
+                        {
+                          internalType: "uint256",
+                          name: "value",
+                          type: "uint256",
+                        },
+                        {
+                          internalType: "bytes",
+                          name: "input",
+                          type: "bytes",
+                        },
+                        {
+                          internalType: "uint8",
+                          name: "status",
+                          type: "uint8",
+                        },
+                        {
+                          components: [
+                            {
+                              internalType: "uint32",
+                              name: "logIndex",
+                              type: "uint32",
+                            },
+                            {
+                              internalType: "address",
+                              name: "emitterAddress",
+                              type: "address",
+                            },
+                            {
+                              internalType: "bytes32[]",
+                              name: "topics",
+                              type: "bytes32[]",
+                            },
+                            {
+                              internalType: "bytes",
+                              name: "data",
+                              type: "bytes",
+                            },
+                            {
+                              internalType: "bool",
+                              name: "removed",
+                              type: "bool",
+                            },
+                          ],
+                          internalType: "struct EVMTransaction.Event[]",
+                          name: "events",
+                          type: "tuple[]",
+                        },
+                      ],
+                      internalType: "struct EVMTransaction.ResponseBody",
+                      name: "responseBody",
+                      type: "tuple",
+                    },
+                  ],
+                  internalType: "struct EVMTransaction.Response",
+                  name: "data",
+                  type: "tuple",
+                },
+              ],
+              internalType: "struct EVMTransaction.Proof",
+              name: "transaction",
+              type: "tuple",
+            },
+          ],
+          name: "isEVMTransactionProofValid",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "transactions",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "bytes32[]",
+                  name: "merkleProof",
+                  type: "bytes32[]",
+                },
+                {
+                  components: [
+                    {
+                      internalType: "bytes32",
+                      name: "attestationType",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "sourceId",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "votingRound",
+                      type: "uint64",
+                    },
+                    {
+                      internalType: "uint64",
+                      name: "lowestUsedTimestamp",
+                      type: "uint64",
+                    },
+                    {
+                      components: [
+                        {
+                          internalType: "bytes32",
+                          name: "transactionHash",
+                          type: "bytes32",
+                        },
+                        {
+                          internalType: "uint16",
+                          name: "requiredConfirmations",
+                          type: "uint16",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "provideInput",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "listEvents",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "uint32[]",
+                          name: "logIndices",
+                          type: "uint32[]",
+                        },
+                      ],
+                      internalType: "struct EVMTransaction.RequestBody",
+                      name: "requestBody",
+                      type: "tuple",
+                    },
+                    {
+                      components: [
+                        {
+                          internalType: "uint64",
+                          name: "blockNumber",
+                          type: "uint64",
+                        },
+                        {
+                          internalType: "uint64",
+                          name: "timestamp",
+                          type: "uint64",
+                        },
+                        {
+                          internalType: "address",
+                          name: "sourceAddress",
+                          type: "address",
+                        },
+                        {
+                          internalType: "bool",
+                          name: "isDeployment",
+                          type: "bool",
+                        },
+                        {
+                          internalType: "address",
+                          name: "receivingAddress",
+                          type: "address",
+                        },
+                        {
+                          internalType: "uint256",
+                          name: "value",
+                          type: "uint256",
+                        },
+                        {
+                          internalType: "bytes",
+                          name: "input",
+                          type: "bytes",
+                        },
+                        {
+                          internalType: "uint8",
+                          name: "status",
+                          type: "uint8",
+                        },
+                        {
+                          components: [
+                            {
+                              internalType: "uint32",
+                              name: "logIndex",
+                              type: "uint32",
+                            },
+                            {
+                              internalType: "address",
+                              name: "emitterAddress",
+                              type: "address",
+                            },
+                            {
+                              internalType: "bytes32[]",
+                              name: "topics",
+                              type: "bytes32[]",
+                            },
+                            {
+                              internalType: "bytes",
+                              name: "data",
+                              type: "bytes",
+                            },
+                            {
+                              internalType: "bool",
+                              name: "removed",
+                              type: "bool",
+                            },
+                          ],
+                          internalType: "struct EVMTransaction.Event[]",
+                          name: "events",
+                          type: "tuple[]",
+                        },
+                      ],
+                      internalType: "struct EVMTransaction.ResponseBody",
+                      name: "responseBody",
+                      type: "tuple",
+                    },
+                  ],
+                  internalType: "struct EVMTransaction.Response",
+                  name: "data",
+                  type: "tuple",
+                },
+              ],
+              internalType: "struct EVMTransaction.Proof",
+              name: "originalTransaction",
+              type: "tuple",
+            },
+            {
+              internalType: "uint256",
+              name: "eventNumber",
+              type: "uint256",
             },
           ],
           stateMutability: "view",

@@ -30,11 +30,12 @@ contract SimpleERC20 is ERC20, Ownable {
 		_mint(account, amount);
 	}
 
-	function burn(address account, uint256 amount) external onlyOwner {
+	function burn(address account, uint256 amount) external {
 		super._burn(account, amount);
 	}
 
 	function _canSetOwner() internal view virtual override returns (bool) {
 		return msg.sender == owner();
 	}
+
 }

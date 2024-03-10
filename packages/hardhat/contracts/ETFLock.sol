@@ -7,6 +7,7 @@ import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {EVMTransaction} from "@flarenetwork/flare-periphery-contracts/coston/stateConnector/interface/EVMTransaction.sol";
 import {FlareContractsRegistryLibrary} from "@flarenetwork/flare-periphery-contracts/coston/util-contracts/ContractRegistryLibrary.sol";
+import {IEVMTransactionVerification} from "@flarenetwork/flare-periphery-contracts/coston/stateConnector/interface/IEVMTransactionVerification.sol";
 
 struct Token {
     address _address;
@@ -38,6 +39,8 @@ contract ETFLock  {
 	address public evmVerifierOfFlareTransaction;
     Token[] requiredTokens;
     uint256 public chainId;
+    TransactionInfo[] public transactions;
+
 
     event Deposit(
         uint256 _vaultId,
@@ -116,4 +119,45 @@ contract ETFLock  {
         }
     }
 
+
+    function checkBurn(EVMTransaction.Proof calldata _transaction) external {
+        require(isEVMTransactionProofValid(_transaction), "Invalid transaction proof");
+        uint256 transactionIndex = transactions.length;
+        transactions.push();
+        transactions[transactionIndex].originalTransaction = _transaction;
+        transactions[transactionIndex].eventNumber = _transaction.data.responseBody.events.length;
+        bytes32 eventTopic = keccak256("Burn(uint256,address)");
+        for(uint256 i = 0; i < _transaction.data.responseBody.events.length; i++) {
+            if (_transaction.data.responseBody.events[i].topics[0] == eventTopic) {
+                (uint256 _vaultId, address _address) = abi.decode(_transaction.data.responseBody.events[i].data, (uint256, address));
+                vaults[_vaultId].state = VaultState.BURNED;
+                for (uint256 j = 0; j < vaults[_vaultId]._tokens.length; j++) {
+                    IERC20(vaults[_vaultId]._tokens[j]._address).transfer(
+                        _address,
+                        vaults[_vaultId]._tokens[j]._quantity
+                    );
+                }
+            }
+        }
+    }
+
+    function burn (
+        uint256 _vaultId
+    )
+        public
+    {
+        for (uint256 j = 0; j < vaults[_vaultId]._tokens.length; j++) {
+            IERC20(vaults[_vaultId]._tokens[j]._address).transfer(
+                msg.sender,
+                vaults[_vaultId]._tokens[j]._quantity
+            );
+        }
+    }
+
+    function isEVMTransactionProofValid(
+        EVMTransaction.Proof calldata transaction
+    ) public view returns (bool) {
+        // Use the library to get the verifier contract and verify that this transaction was proved by state connector
+        return IEVMTransactionVerification(0x0bd4a6D3eFbB0aa8b191AE71E7dfF41c10fe8B9F).verifyEVMTransaction(transaction);
+    }
 }

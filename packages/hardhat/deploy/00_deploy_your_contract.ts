@@ -102,60 +102,61 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
     const etfAddress = await etf.getAddress();
     const data = fs.readFileSync("/Users/gaetano/dev/flare_training/packages/hardhat/evmproof2.json");
     const proof = JSON.parse(data.toString());
-    console.log("Deploying ETF Lock contract", etfAddress);
+    console.log("Deploying ETF contract", etfAddress);
     console.log(proof);
     const chainId = await etf.chainId();
     console.log("ChainId: ", chainId.toString());
     await pepeToken.approve(etfAddress, BigNumber.from(1000).mul(BigNumber.from(10).pow(18)).toString());
     await etf.checkExternalDeposit(proof);
-    await etf.deposit(
-      0,
-      [
-        {
-          _address: pepeTokenAddress,
-          _quantity: BigNumber.from(100).mul(BigNumber.from(10).pow(18)).toString(),
-          _chainId: costonChainId.toString(),
-          _contributor: deployer,
-        },
-      ]
-    )
+    await etf.deposit(0, [
+      {
+        _address: pepeTokenAddress,
+        _quantity: BigNumber.from(100).mul(BigNumber.from(10).pow(18)).toString(),
+        _chainId: costonChainId.toString(),
+        _contributor: deployer,
+      },
+    ]);
 
-    await etf.deposit(
-      3,
-      [
-        {
-          _address: pepeTokenAddress,
-          _quantity: BigNumber.from(100).mul(BigNumber.from(10).pow(18)).toString(),
-          _chainId: costonChainId.toString(),
-          _contributor: deployer,
-        },
-      ]
-    )
+    await etf.deposit(3, [
+      {
+        _address: pepeTokenAddress,
+        _quantity: BigNumber.from(100).mul(BigNumber.from(10).pow(18)).toString(),
+        _chainId: costonChainId.toString(),
+        _contributor: deployer,
+      },
+    ]);
 
-    await hre.run("verify:verify", {
-      address: etfAddress,
-      constructorArguments: [
-        costonChainId,
-        etfTokenAddress,
-        100,
-        [
-          {
-            _address: overChainAddress,
-            _quantity: BigNumber.from(50).toString(),
-            _chainId: sepoliaChainId.toString(),
-            _contributor: deployer,
-          },
-          {
-            _address: uniSwapAddress,
-            _quantity: BigNumber.from(100).toString(),
-            _chainId: sepoliaChainId.toString(),
-            _contributor: deployer,
-          },
+    // approve etf tokens to reedem the tokens
+    await etfToken.approve(etfAddress, 10000000);
+    await etf.burn(0);
+
+    try {
+      await hre.run("verify:verify", {
+        address: etfAddress,
+        constructorArguments: [
+          costonChainId,
+          etfTokenAddress,
+          100,
+          [
+            {
+              _address: overChainAddress,
+              _quantity: BigNumber.from(50).toString(),
+              _chainId: sepoliaChainId.toString(),
+              _contributor: deployer,
+            },
+            {
+              _address: uniSwapAddress,
+              _quantity: BigNumber.from(100).toString(),
+              _chainId: sepoliaChainId.toString(),
+              _contributor: deployer,
+            },
+          ],
         ],
-      ],
-    });
-
-
+      });
+    } catch (e) {
+      console.log("Error verifying the contract");
+      console.log(e);
+    }
   }
 
   if (hre.network.name === "coston" && false) {

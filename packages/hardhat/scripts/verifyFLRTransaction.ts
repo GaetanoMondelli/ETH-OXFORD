@@ -1,7 +1,7 @@
 import flareLib = require("@flarenetwork/flare-periphery-contract-artifacts");
 import "dotenv/config";
 import { network, run } from "hardhat";
-import fs  from "fs";
+import fs from "fs";
 import { TransactionResponse } from "ethers";
 import hardhat, { ethers } from "hardhat";
 import { IStateConnector } from "../typechain-types";
@@ -47,7 +47,7 @@ function toHex(data: string): string {
   return "0x" + result.padEnd(64, "0");
 }
 async function requestMerkleProof(scRound: number, txID: string) {
-  const attestationRequest = await prepareAttestationRequest("EVMTransaction", "eth", "testETH", {
+  const attestationRequest = await prepareAttestationRequest("EVMTransaction", "flr", "testFLR", {
     transactionHash: txID,
     requiredConfirmations: "1",
     provideInput: true,
@@ -107,6 +107,7 @@ async function executeStateConnectorProof(txs: string[]) {
       return req["abiEncodedRequest"];
     }),
   );
+  console.log("Executing state connector proof");
 
   console.log("Responses: ", responses);
 
@@ -187,8 +188,8 @@ async function executeStateConnectorProof(txs: string[]) {
 
 async function main() {
   await executeStateConnectorProof([
-    // "0x0613fc75cc5f4e22294dbfe5bb575d7fc714efe0de94beda59b423b0a2225587",
-    "0x12ed6a48e594fcab55d54c184edbd7c22c19874ecf0be6239044bb44d387f758"
+    // "0xb6b00466a1ff1e6e7e660d7e678c2cf2b30d31dbf7ad575e047f4f843ca41308"
+    "0x98e79438e32f4a33ec9c1205c319c3c6bdd0ec1fdf14973d636119951303a32d",
   ]);
 }
 

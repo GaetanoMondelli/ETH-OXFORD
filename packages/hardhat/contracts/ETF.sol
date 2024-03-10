@@ -184,11 +184,9 @@ contract ETF  {
         _deposit(vaultId, tokens, external_chainId);
     }
 
-    // burn
 
     function burn(uint256 _vaultId) public {
-        require(vaults[_vaultId].state == VaultState.MINTED, "Vault is not minted");
-        IETFToken(etfToken).burn(msg.sender, etfTokenPerVault);
+        require(vaults[_vaultId].state == VaultState.MINTED, "Vault was not minted!");
         vaults[_vaultId].state = VaultState.BURNED;
         for (uint256 i = 0; i < vaults[_vaultId]._tokens.length; i++) {
             if (vaults[_vaultId]._tokens[i]._chainId == chainId) {
@@ -198,6 +196,7 @@ contract ETF  {
                 );
             }
         }
+        IETFToken(etfToken).burn(msg.sender, etfTokenPerVault);
         emit Burn(_vaultId, msg.sender);
     }
     
@@ -208,5 +207,7 @@ contract ETF  {
         return FlareContractsRegistryLibrary
                 .auxiliaryGetIEVMTransactionVerification()
                 .verifyEVMTransaction(transaction);
+
+                // 0x0bd4a6D3eFbB0aa8b191AE71E7dfF41c10fe8B9F
     }
 }
